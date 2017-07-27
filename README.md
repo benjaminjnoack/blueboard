@@ -16,6 +16,6 @@ BlueBoard is a C library for the LPC1768 mbed application board.
 * USBDevice
 * XBee
 * RN-XV
-* RN-XB (Bluetooth)
+* RN42-XV
 * Z-Wave
 * Ethernet
