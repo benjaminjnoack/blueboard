@@ -1,16 +1,11 @@
 #include "registers.h"
 
 typedef enum {
-  RED,//TODO define offset
-  GREEN,
-  BLUE
+  RED = (1 << 3),//p23 p2.3
+  GREEN = (1 << 2),//p24 p2.2
+  BLUE = (1 << 1)//p25 p2.1
 } rgb_t;
 
-void red_off(void);
-void red_on(void);
-
-void green_off(void);
-void green_on(void);
-
-void blue_off(void);
-void blue_on(void);
+void rgb_init(void);
+void rgb_off(rgb_t rgb);
+void rgb_on(rgb_t rgb);
