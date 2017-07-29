@@ -1,10 +1,11 @@
-#include "math.h"
 #include "leds.h"
+#include "pots.h"
 #include "rgb.h"
 
-//TODO a parameterized delay
-void hard_delay(void) {
-  for (double i = 0; i <= 2000; i++) {
-    sin(i);
+void delay() {
+  double j;
+  for (j = 0; j < 100000; j++) {
+    j++;
+    j--;
   }
 }

@@ -7,11 +7,13 @@ __Complete__
 * [RGB LED](https://github.com/benjaminjnoack/blueboard/tree/master/lib/rgb)
 
 __In Progress__
-* Joystick
+* Potentiometers
 
 __Planned__
-* Potentiometers
+* Port
+* Joystick
 * GPIO
+* Speaker
 * PWM
 * DAC
 * ADC
@@ -25,3 +27,14 @@ __Planned__
 * RN42-XV
 * Z-Wave
 * Ethernet
+
+## Notes
+
+Example programs in every header file
+
+IRQ implementation requires setting the handler's address in the vector table (I think).
+The addresses in the vector table are 4 bytes (32 bits)
+platformio supports cmsis...I really need to support them!
+Maybe __FIOSET__ should be used for output pins instead of __FIOPIN__
+Notation like `7:0` means from 7 (MSB) to 0 (LSB)
+AD0CR |= 0x04; did not work but AD0CR |= (1 << 4); did

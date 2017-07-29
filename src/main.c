@@ -1,25 +1,32 @@
 #include "blueboard.h"
 
-rgb_t rgb[] = {RED, GREEN, BLUE};
-
-void blink(rgb_t rgb) {
-  rgb_on(rgb);
-  hard_delay();
-  rgb_off(rgb);
-  hard_delay();
-}
-
 int main(int argc, char const *argv[]) {
-  rgb_init();
+
+  init_leds();
+  init_pots();
 
   while (1) {
-    short i;
-    for (i = 0; i < 3; i++) {
-      blink(rgb[i]);
+    led_off(LED1);
+    led_off(LED2);
+    led_off(LED3);
+    led_off(LED4);
+
+    int ADCdata = read_pot(POT2);
+
+    if (ADCdata > 1000) {
+      led_on(LED1);
     }
-    for (i = 2; i >= 0; i--) {
-      blink(rgb[i]);
+    if (ADCdata > 2000) {
+      led_on(LED2);
     }
+    if (ADCdata > 3000) {
+      led_on(LED3);
+    }
+    if (ADCdata > 4000) {
+      led_on(LED4);
+    }
+
+    delay();
   }
   return 0;
 }

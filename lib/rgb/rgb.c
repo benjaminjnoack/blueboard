@@ -1,6 +1,6 @@
 #include "rgb.h"
 
-void rgb_init(void) {
+void init_rgb(void) {
   FIO2DIR0 |= (RED | GREEN | BLUE);
   FIO2PIN0 |= (RED | GREEN | BLUE);
 }
