@@ -13,10 +13,10 @@ int read_pot(pot_t pot) {
   int ADCdata;
   switch (pot) {
     case POT1:
-      AD0CR |= (1 << 4);
+      AD0CR = (AD0CR & 0xFFFFFF00) | (1 << 4);
       break;
     case POT2:
-      AD0CR |= (1 << 5);
+      AD0CR = (AD0CR & 0xFFFFFF00) | (1 << 5);
       break;
   }
 
