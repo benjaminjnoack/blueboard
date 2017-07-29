@@ -5,13 +5,13 @@ BlueBoard is a C library for the [LPC1768](https://developer.mbed.org/platforms/
 __Complete__
 * [LEDs](https://github.com/benjaminjnoack/blueboard/tree/master/lib/leds)
 * [RGB LED](https://github.com/benjaminjnoack/blueboard/tree/master/lib/rgb)
+* [Pots](https://github.com/benjaminjnoack/blueboard/tree/master/lib/pots)
 
 __In Progress__
-* Potentiometers
+* Joystick
 
 __Planned__
 * Port
-* Joystick
 * GPIO
 * Speaker
 * PWM
@@ -25,8 +25,8 @@ __Planned__
 * XBee
 * RN-XV
 * RN42-XV
-* Z-Wave
 * Ethernet
+* *special guest* UZB
 
 ## Notes
 
