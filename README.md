@@ -3,19 +3,20 @@
 C library for the [LPC1768](https://developer.mbed.org/platforms/mbed-LPC1768/) [mbed application board](https://developer.mbed.org/cookbook/mbed-application-board).
 
 __Complete__
+* [Joystick](https://github.com/benjaminjnoack/blueboard/tree/master/lib/joystick)
 * [LEDs](https://github.com/benjaminjnoack/blueboard/tree/master/lib/leds)
-* [RGB LED](https://github.com/benjaminjnoack/blueboard/tree/master/lib/rgb)
 * [Pots](https://github.com/benjaminjnoack/blueboard/tree/master/lib/pots)
+* [RGB LED](https://github.com/benjaminjnoack/blueboard/tree/master/lib/rgb)
 
 __In Progress__
-* Joystick
+* DAC
 
 __Planned__
 * Port
 * GPIO
 * Speaker
 * PWM
-* DAC
+
 * ADC
 * I2C
 * SPI
