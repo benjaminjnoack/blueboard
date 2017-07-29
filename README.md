@@ -1,6 +1,6 @@
 # BlueBoard
 
-BlueBoard is a C library for the [LPC1768](https://developer.mbed.org/platforms/mbed-LPC1768/) [mbed application board](https://developer.mbed.org/cookbook/mbed-application-board).
+C library for the [LPC1768](https://developer.mbed.org/platforms/mbed-LPC1768/) [mbed application board](https://developer.mbed.org/cookbook/mbed-application-board).
 
 __Complete__
 * [LEDs](https://github.com/benjaminjnoack/blueboard/tree/master/lib/leds)
