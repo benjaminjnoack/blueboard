@@ -1,4 +1,4 @@
-#include "registers.h"
+#include "LPC17xx.h"
 
 typedef enum {
   LED1 = (1 << 2),
@@ -10,4 +10,3 @@ typedef enum {
 void init_leds();
 void led_on(led_t LEDS);
 void led_off(led_t LEDS);
-//TODO leds_off leds_on

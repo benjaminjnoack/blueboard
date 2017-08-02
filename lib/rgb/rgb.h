@@ -1,4 +1,4 @@
-#include "registers.h"
+#include "LPC17xx.h"
 
 typedef enum {
   RED = (1 << 3),//p23 p2.3

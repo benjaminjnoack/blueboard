@@ -16,7 +16,6 @@ __Planned__
 * GPIO
 * Speaker
 * PWM
-
 * ADC
 * I2C
 * SPI
@@ -29,13 +28,11 @@ __Planned__
 * Ethernet
 * *special guest* UZB
 
+## TODO
+
+* read_pot_async (0x98 ADC A/D Converter end of conversion vector table entry)
+* leds_off
+
 ## Notes
 
-Example programs in every header file
-
-IRQ implementation requires setting the handler's address in the vector table (I think).
-The addresses in the vector table are 4 bytes (32 bits)
-platformio supports cmsis...I really need to support them!
-Maybe __FIOSET__ should be used for output pins instead of __FIOPIN__
-Notation like `7:0` means from 7 (MSB) to 0 (LSB)
-AD0CR |= 0x04; did not work but AD0CR |= (1 << 4); did
+"Take some heart if your working on a projet that no one understands, or no one appreciates. If at the end of the day *you* appreciated it, and *you* enjoyed it, then *you won*." ~ guy at defcon.
