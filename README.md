@@ -3,6 +3,7 @@
 C library for the [LPC1768](https://developer.mbed.org/platforms/mbed-LPC1768/) [mbed application board](https://developer.mbed.org/cookbook/mbed-application-board). It is build with [PlatformIO](http://platformio.org/).
 
 __Complete__
+* [ADC](https://github.com/benjaminjnoack/blueboard/tree/master/lib/adc)
 * [DAC](https://github.com/benjaminjnoack/blueboard/tree/master/lib/dac)
 * [Joystick](https://github.com/benjaminjnoack/blueboard/tree/master/lib/joystick)
 * [LEDs](https://github.com/benjaminjnoack/blueboard/tree/master/lib/leds)
@@ -10,10 +11,9 @@ __Complete__
 * [RGB LED](https://github.com/benjaminjnoack/blueboard/tree/master/lib/rgb)
 
 __In Progress__
-* ADC
+* PWM
 
 __Planned__
-* PWM
 * Port
 * GPIO
 * Speaker

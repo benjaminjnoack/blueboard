@@ -41,7 +41,9 @@ int read_ain(ain_t ain) {
   int ADCdata;
   LPC_ADC->ADCR = (LPC_ADC->ADCR & 0xFFFFFF00) | (1 << ain);
   LPC_ADC->ADCR |= AD0CR_START_MASK;
-  while ((LPC_ADC->ADGDR & AD0GDR_DONE_MASK) == 0) ;
+  while ((LPC_ADC->ADGDR & AD0GDR_DONE_MASK) == 0) {
+    //do nothing
+  }
   ADCdata = LPC_ADC->ADGDR;
   LPC_ADC->ADCR &= AD0CR_STOP_MASK;
   ADCdata = (ADCdata >> 4) & ADC_DATA_MASK;
