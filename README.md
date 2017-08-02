@@ -18,7 +18,10 @@ __Planned__
 * GPIO
 * Speaker
 * I2C
+* MMA7660
+* LM7580
 * SPI
+* CR12832
 * UART
 * USBHost
 * USBDevice
