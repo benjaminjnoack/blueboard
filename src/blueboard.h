@@ -1,3 +1,4 @@
+#include "dac.h"
 #include "leds.h"
 #include "joystick.h"
 #include "pots.h"
