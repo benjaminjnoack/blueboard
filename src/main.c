@@ -2,28 +2,20 @@
 //NOTE: Don't forget the super loop!
 int main(int argc, char const *argv[]) {
   init_leds();
-  init_pots();
+  init_rgb();
 
   while (1) {
+    led_on(LED1);
+    rgb_off(BLUE);
+    rgb_off(RED);
+    rgb_off(GREEN);
+    delay();
     led_off(LED1);
-    led_off(LED2);
-    led_off(LED3);
-    led_off(LED4);
-
-    int adc = read_pot(POT1);
-    if (adc > 1000) {
-      led_on(LED1);
-    }
-    if (adc > 2000) {
-      led_on(LED2);
-    }
-    if (adc > 3000) {
-      led_on(LED3);
-    }
-    if (adc > 4000) {
-      led_on(LED4);
-    }
-
+    rgb_on(RED);
+    delay();
+    rgb_on(GREEN);
+    delay();
+    rgb_on(BLUE);
     delay();
   }
 
