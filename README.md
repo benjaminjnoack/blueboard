@@ -8,15 +8,13 @@ __Complete__
 * [Joystick](https://github.com/benjaminjnoack/blueboard/tree/master/lib/joystick)
 * [LEDs](https://github.com/benjaminjnoack/blueboard/tree/master/lib/leds)
 * [Pots](https://github.com/benjaminjnoack/blueboard/tree/master/lib/pots)
+* [PWM](https://github.com/benjaminjnoack/blueboard/tree/master/lib/pwm)
 * [RGB LED](https://github.com/benjaminjnoack/blueboard/tree/master/lib/rgb)
 
 __In Progress__
-* PWM
+* Speaker
 
 __Planned__
-* Port
-* GPIO
-* Speaker
 * I2C
 * MMA7660
 * LM7580
@@ -33,8 +31,8 @@ __Planned__
 
 ## TODO
 
-* read_pot_async (0x98 ADC A/D Converter end of conversion vector table entry)
-* leds_off
+* read_pot_async
+* support double edge PWM
 
 ## Notes
 
