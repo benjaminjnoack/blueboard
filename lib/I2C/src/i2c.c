@@ -4,7 +4,7 @@
 volatile char slave_address;
 volatile char master_buffer[MASTER_BUFFER_SIZE];
 volatile int data_counter = 0;
-volatile char *master_ptr;//ideally set to NULL
+volatile char *master_ptr;
 volatile char busy = 0;
 
 void init_i2c(void) {
@@ -32,7 +32,7 @@ void init_i2c(void) {
   NVIC_EnableIRQ(I2C2_IRQn);
 }
 
-i2c_result_t bb_i2c_write(char address, char *buffer, char bytes) {
+i2c_result_t bb_i2c_write(uint8_t address, char *buffer, uint8_t bytes) {
   if (busy) {
     return ERR_BUSY;
   } else if (bytes > MASTER_BUFFER_SIZE) {
@@ -65,29 +65,27 @@ void I2C2_IRQHandler(void) {
     case START_TRANSMITTED:
     case RE_START_TRANSMITTED:
       led_on(LED1);
-      // LPC_I2C2->I2CONSET = 0x04;
-      LPC_I2C2->I2CONCLR = (1 << STA);
+      LPC_I2C2->I2CONCLR = (1 << STA);//clear the start bit
       LPC_I2C2->I2DAT = (slave_address & I2C_WRITE_MASK);
       break;
     case SLA_TRANSMITTED_ACK:
       led_on(LED2);
-      // LPC_I2C2->I2CONSET = 0x04;
       LPC_I2C2->I2DAT = *master_ptr;
       master_ptr++;
+      data_counter--;
       break;
     case SLA_TRANSMITTED_NACK:
       LPC_I2C2->I2CONSET = 0x14;
       busy = 0;
       break;
     case DATA_TRANSMITTED_ACK:
-      led_on(LED3);
-      if (--data_counter >= 0) {
+      if (data_counter--) {
+        led_on(LED3);
+        LPC_I2C2->I2DAT = *master_ptr;
+        master_ptr++;
+      } else {
         LPC_I2C2->I2CONSET = 0x14;
         busy = 0;
-      } else {
-        LPC_I2C2->I2DAT = *master_ptr;
-        // LPC_I2C2->I2CONSET = 0x04;
-        master_ptr++;
       }
       break;
     case DATA_TRANSMITTED_NACK:

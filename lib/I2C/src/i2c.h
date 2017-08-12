@@ -41,7 +41,7 @@
 #endif
 
 #ifndef MASTER_BUFFER_SIZE
-#define MASTER_BUFFER_SIZE 10
+#define MASTER_BUFFER_SIZE 64
 #endif
 
 typedef enum {
@@ -64,7 +64,7 @@ typedef enum {
 
 void init_i2c(void);
 i2c_result_t bb_i2c_read(char address, char *buffer, char bytes);
-i2c_result_t bb_i2c_write(char address, char *buffer, char bytes);
+i2c_result_t bb_i2c_write(uint8_t address, char *buffer, uint8_t bytes);
 
 /*Interrupts in I2C
 When the I 2 C interrupt is entered, I2STAT contains a status code which identifies one of

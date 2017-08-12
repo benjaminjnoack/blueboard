@@ -37,6 +37,7 @@ __Planned__
 
 ## Notes
 Build for the mbed application board - not a general purpose lib for LPC1768.
+Had to clear the start bit for I2C.
 ___
 
 "Take some heart if your working on a project that no one understands, or no one appreciates. If at the end of the day *you* appreciated it, and *you* enjoyed it, then *you won*." ~ guy on the radio.
