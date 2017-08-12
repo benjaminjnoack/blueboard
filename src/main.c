@@ -1,16 +1,23 @@
 #include "blueboard.h"
 
 int main(int argc, char const *argv[]) {
-  SystemInit();
-  init_pwm();
-  set_cycle_rate(50000);
-  enable_pwm(PWM1);
-  enable_pwm(PWM2);
-  set_duty_cycle(PWM1, 10000);
-  set_duty_cycle(PWM2, 20000);
+  init_i2c();
+  init_leds();
+
+  char buf = 'h';
 
   while (1) {
-    /* super loop */
+    led_off(LED1);
+    led_off(LED2);
+    led_off(LED3);
+    led_off(LED4);
+
+    i2c_result_t res = bb_i2c_write(0xA0, &buf, 1);
+
+
+    delay();
+    delay();
+    delay();
   }
 
   return 0;

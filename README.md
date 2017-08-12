@@ -12,10 +12,10 @@ __Complete__
 * [RGB LED](https://github.com/benjaminjnoack/blueboard/tree/master/lib/rgb)
 
 __In Progress__
-* Speaker
+* I2C
 
 __Planned__
-* I2C
+* Speaker
 * MMA7660
 * LM7580
 * SPI
@@ -33,7 +33,10 @@ __Planned__
 
 * read_pot_async
 * support double edge PWM
+* blueboard.c (initialize() - function to set up the board as necessary)
 
 ## Notes
+Build for the mbed application board - not a general purpose lib for LPC1768.
+___
 
 "Take some heart if your working on a project that no one understands, or no one appreciates. If at the end of the day *you* appreciated it, and *you* enjoyed it, then *you won*." ~ guy on the radio.

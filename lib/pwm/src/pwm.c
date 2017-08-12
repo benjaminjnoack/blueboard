@@ -23,6 +23,8 @@ void enable_pwm(pwm_t pwm) {
     case PWM2:
       LPC_PWM1->PCR |= (1 << PWMENA6);
       break;
+    case PWM3:
+      LPC_PWM1->PCR |= (1 << PWMENA1);
   }
 }
 
@@ -34,6 +36,8 @@ void disable_pwm(pwm_t pwm) {
     case PWM2:
       LPC_PWM1->PCR &= ~(1 << PWMENA6);
       break;
+    case PWM3:
+      LPC_PWM1->PCR &= ~(1 << PWMENA1);
   }
 }
 
@@ -56,5 +60,8 @@ void set_duty_cycle(pwm_t pwm, uint32_t duty) {
       LPC_PWM1->MR5 = duty;
       LPC_PWM1->LER |= (1 << 5);
       break;
+    case PWM3:
+      LPC_PWM1->MR1 = duty;
+      LPC_PWM1->LER |= (1 << 1);
   }
 }

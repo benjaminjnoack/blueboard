@@ -1,5 +1,6 @@
 #include "dac.h"
 #include "leds.h"
+#include "i2c.h"
 #include "joystick.h"
 #include "pots.h"
 #include "pwm.h"

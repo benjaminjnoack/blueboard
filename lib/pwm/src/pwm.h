@@ -4,6 +4,10 @@
 #define PCPWM1 6
 #endif
 
+#ifndef PWMENA1
+#define PWMENA1 9
+#endif
+
 #ifndef PWMENA5
 #define PWMENA5 13
 #endif
@@ -21,8 +25,9 @@
 #endif
 
 typedef enum {
-  PWM1, //p21 P2.5 pwm1.6
-  PWM2  //p22 P2.4 pwm1.5
+  PWM1, //p21 P2.5 PWM1.6
+  PWM2, //p22 P2.4 PWM1.5
+  PWM3  //p26 P2.0 PWM1.1
 } pwm_t;
 
 void init_pwm(void);
