@@ -54,7 +54,7 @@ flag. SI must be reset by software, by writing a 1 to the SIC bit in I2CONCLR re
 #define MASTER_BUFFER_SIZE 64
 #endif
 
-typedef enum {//TODO more of these
+typedef enum {//TODO more of these, and I2C specific
   OK = 0,
   ERR_BUSY = -1,
   ERR_DATA_SIZE = -2
@@ -63,10 +63,11 @@ typedef enum {//TODO more of these
 typedef enum {
   IDLE,
   READ,
+  READ_REGISTER,
   WRITE
 } i2c_mode_t;
 
-typedef enum {
+typedef enum {//TODO better names for these TX_SLA_W_RX_ACK
   START_TRANSMITTED = 0x08,
   RE_START_TRANSMITTED = 0x10,
   SLA_W_TRANSMITTED_ACK = 0x18,
@@ -82,3 +83,4 @@ typedef enum {
 void init_i2c(void);
 i2c_result_t bb_i2c_read(uint8_t address, char *buffer, uint8_t bytes);
 i2c_result_t bb_i2c_write(uint8_t address, char *buffer, uint8_t bytes);
+i2c_result_t read_i2c_register(uint8_t address, char reg, uint8_t bytes);

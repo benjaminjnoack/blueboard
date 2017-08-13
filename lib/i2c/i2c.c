@@ -60,32 +60,43 @@ i2c_result_t bb_i2c_write(uint8_t address, char *buffer, uint8_t bytes) {
   } else {
     mode = WRITE;
   }
-  //set the address to read from
-  slave_address = address;
-  //copy the data to the master buffer
+
   for (uint8_t i = 0; i < bytes; i++) {
     master_buffer[i] = buffer[i];
   }
-  //set the master_ptr to tbe first byte
+  slave_address = address;
   master_ptr = &master_buffer[0];
-  //set the data counter;
   data_counter = bytes;
-  //set the start bit
   LPC_I2C2->I2CONSET = STA;
-
   while (mode) {
     /* busy wait */
   }
+  return OK;
+}
 
+i2c_result_t read_i2c_register(uint8_t address, char reg, uint8_t bytes) {
+  if (mode) {
+    return ERR_BUSY;
+  } else if (bytes > MASTER_BUFFER_SIZE) {
+    return ERR_DATA_SIZE;
+  } else {
+    mode = READ_REGISTER;
+  }
+
+  slave_address = address;
+  master_buffer[0] = reg;
+  master_ptr = &master_buffer[0];
+  data_counter = bytes;
+  LPC_I2C2->I2CONSET = STA;
+  while (mode) {
+    /* busy wait */
+  }
   return OK;
 }
 
 void I2C2_IRQHandler(void) {
-  uint8_t StatValue = LPC_I2C2->I2STAT;
-
-  switch (StatValue) {
+  switch (LPC_I2C2->I2STAT) {
     case START_TRANSMITTED:
-    case RE_START_TRANSMITTED:
       LPC_I2C2->I2CONCLR = (STA | SI);
       switch (mode) {
         case IDLE:
@@ -94,15 +105,25 @@ void I2C2_IRQHandler(void) {
         case READ:
           LPC_I2C2->I2DAT = (slave_address | 0x1);
           break;
+        case READ_REGISTER:
         case WRITE:
           LPC_I2C2->I2DAT = (slave_address & I2C_WRITE_MASK);
           break;
       }
       break;
+    case RE_START_TRANSMITTED:
+      LPC_I2C2->I2CONCLR = (STA | SI);
+      if (mode == READ_REGISTER) {
+        LPC_I2C2->I2DAT = (slave_address | 0x1);
+      }
+      break;
     case SLA_W_TRANSMITTED_ACK:
       LPC_I2C2->I2CONCLR = SI;
-      LPC_I2C2->I2DAT = *master_ptr++;
-      data_counter--;
+      LPC_I2C2->I2DAT = *master_ptr;
+      if (mode == READ) {
+        master_ptr++;
+        data_counter--;
+      }
       break;
     case SLA_W_TRANSMITTED_NACK:
       LPC_I2C2->I2CONSET = (AA | STO);
@@ -111,11 +132,15 @@ void I2C2_IRQHandler(void) {
       break;
     case DATA_W_TRANSMITTED_ACK:
       LPC_I2C2->I2CONCLR = SI;
-      if (data_counter--) {
-        LPC_I2C2->I2DAT = *master_ptr++;
+      if (mode == READ_REGISTER) {
+        LPC_I2C2->I2CONSET = STA;
       } else {
-        LPC_I2C2->I2CONSET = (AA | STO);
-        mode = IDLE;
+        if (data_counter--) {
+          LPC_I2C2->I2DAT = *master_ptr++;
+        } else {
+          LPC_I2C2->I2CONSET = (AA | STO);
+          mode = IDLE;
+        }
       }
       break;
     case DATA_W_TRANSMITTED_NACK:
