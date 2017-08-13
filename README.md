@@ -5,6 +5,7 @@ C library for the [LPC1768](https://developer.mbed.org/platforms/mbed-LPC1768/) 
 __Complete__
 * [ADC](https://github.com/benjaminjnoack/blueboard/tree/master/lib/adc)
 * [DAC](https://github.com/benjaminjnoack/blueboard/tree/master/lib/dac)
+* [I2C](https://github.com/benjaminjnoack/blueboard/tree/master/lib/i2c)
 * [Joystick](https://github.com/benjaminjnoack/blueboard/tree/master/lib/joystick)
 * [LEDs](https://github.com/benjaminjnoack/blueboard/tree/master/lib/leds)
 * [Pots](https://github.com/benjaminjnoack/blueboard/tree/master/lib/pots)
@@ -12,12 +13,11 @@ __Complete__
 * [RGB LED](https://github.com/benjaminjnoack/blueboard/tree/master/lib/rgb)
 
 __In Progress__
-* I2C
+* LM7580 Digital temperature sensor and thermal watchdog
 
 __Planned__
 * Speaker
 * MMA7660
-* LM7580
 * SPI
 * CR12832
 * UART

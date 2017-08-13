@@ -89,7 +89,7 @@ void I2C2_IRQHandler(void) {
       LPC_I2C2->I2CONCLR = (STA | SI);
       switch (mode) {
         case IDLE:
-
+          //TODO
           break;
         case READ:
           LPC_I2C2->I2DAT = (slave_address | 0x1);
