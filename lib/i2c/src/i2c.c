@@ -101,8 +101,7 @@ void I2C2_IRQHandler(void) {
       }
       break;
     case SLA_W_TRANSMITTED_ACK:
-      LPC_I2C2->I2DAT = *master_ptr;
-      master_ptr++;
+      LPC_I2C2->I2DAT = *master_ptr++;
       data_counter--;
       break;
     case SLA_W_TRANSMITTED_NACK:
@@ -111,8 +110,7 @@ void I2C2_IRQHandler(void) {
       break;
     case DATA_W_TRANSMITTED_ACK:
       if (data_counter--) {
-        LPC_I2C2->I2DAT = *master_ptr;
-        master_ptr++;
+        LPC_I2C2->I2DAT = *master_ptr++;
       } else {
         LPC_I2C2->I2CONSET = (AA | STO);
         mode = IDLE;
@@ -131,8 +129,7 @@ void I2C2_IRQHandler(void) {
       mode = IDLE;
       break;
     case DATA_R_TRANSMITTED_ACK:
-      *master_ptr = LPC_I2C2->I2DAT;
-      master_ptr++;
+      *master_ptr++ = LPC_I2C2->I2DAT;
       if (--data_counter - 1) {
         led_on(LED3);
       } else {
@@ -142,6 +139,7 @@ void I2C2_IRQHandler(void) {
       break;
     case DATA_R_TRANSMITTED_NACK:
       led_on(LED4);
+      *master_ptr = LPC_I2C2->I2DAT;
       LPC_I2C2->I2CONSET = (AA | STO);
       mode = IDLE;
       break;
