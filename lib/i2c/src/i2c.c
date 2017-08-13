@@ -25,7 +25,7 @@ void init_i2c(void) {
   LPC_PINCON->PINMODE_OD0 |= (1 << 10);
   LPC_PINCON->PINMODE_OD0 |= (1 << 11);
   //enable I2C interface
-  LPC_I2C2->I2CONSET |= (1 << I2EN);
+  LPC_I2C2->I2CONSET |= I2EN;
   //set the duty cycle to 120 cycles
   LPC_I2C2->I2SCLL = DUTY_CYCLE;
   LPC_I2C2->I2SCLH = DUTY_CYCLE;
@@ -45,7 +45,7 @@ i2c_result_t bb_i2c_read(uint8_t address, char *buffer, uint8_t bytes) {
   slave_address = address;
   master_ptr = &buffer[0];
   data_counter = bytes;
-  LPC_I2C2->I2CONSET |= (1 << STA);
+  LPC_I2C2->I2CONSET = STA;
   while (mode) {
     /* busy wait */
   }
@@ -76,7 +76,7 @@ i2c_result_t bb_i2c_write(uint8_t address, char *buffer, uint8_t bytes) {
   //set the data counter;
   data_counter = bytes;
   //set the start bit
-  LPC_I2C2->I2CONSET |= (1 << STA);
+  LPC_I2C2->I2CONSET = STA;
   //TODO timeout
   while (mode) {
     /* busy wait */
@@ -90,7 +90,7 @@ void I2C2_IRQHandler(void) {
     case START_TRANSMITTED:
     case RE_START_TRANSMITTED:
       led_on(LED1);
-      LPC_I2C2->I2CONCLR = (1 << STA);//TODO set as define
+      LPC_I2C2->I2CONCLR = STA;
       switch (mode) {
         case IDLE:
           //TODO
@@ -109,7 +109,7 @@ void I2C2_IRQHandler(void) {
       data_counter--;
       break;
     case SLA_W_TRANSMITTED_NACK:
-      LPC_I2C2->I2CONSET = 0x14;
+      LPC_I2C2->I2CONSET = (AA | STO);
       mode = IDLE;
       break;
     case DATA_W_TRANSMITTED_ACK:
@@ -117,20 +117,20 @@ void I2C2_IRQHandler(void) {
         LPC_I2C2->I2DAT = *master_ptr;
         master_ptr++;
       } else {
-        LPC_I2C2->I2CONSET = 0x14;
+        LPC_I2C2->I2CONSET = (AA | STO);
         mode = IDLE;
       }
       break;
     case DATA_W_TRANSMITTED_NACK:
-      LPC_I2C2->I2CONSET = 0x14;//TODO reconsider these
+      LPC_I2C2->I2CONSET = (AA | STO);
       mode = IDLE;
       break;
     case SLA_R_TRANSMITTED_ACK:
       led_on(LED2);
-      LPC_I2C2->I2CONSET = (1 << AA);
+      LPC_I2C2->I2CONSET = AA;
       break;
     case SLA_R_TRANSMITTED_NACK:
-      LPC_I2C2->I2CONSET = 0x14;
+      LPC_I2C2->I2CONSET = (AA | STO);
       mode = IDLE;
       break;
     case DATA_R_TRANSMITTED_ACK:
@@ -139,21 +139,20 @@ void I2C2_IRQHandler(void) {
       if (--data_counter - 1) {
         led_on(LED3);
       } else {
-        led_on(LED4);
-        LPC_I2C2->I2CONCLR = 0x0C;
+        LPC_I2C2->I2CONCLR = AA;
         mode = IDLE;
       }
       break;
     case DATA_R_TRANSMITTED_NACK:
-      //TODO read byte into register
-      LPC_I2C2->I2CONSET = 0x14;
+      led_on(LED4);
+      LPC_I2C2->I2CONSET = (AA | STO);
       mode = IDLE;
       break;
     default:
       rgb_on(RED);//easy enough to connect a red led
-      LPC_I2C2->I2CONSET = 0x14;
+      LPC_I2C2->I2CONSET = (AA | STO);
       mode = IDLE;
   }
   //unset the SI bit through I2CONCLR
-  LPC_I2C2->I2CONCLR = 0x08;
+  LPC_I2C2->I2CONCLR = SI;
 }

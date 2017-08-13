@@ -17,23 +17,23 @@
 #endif
 
 #ifndef AA
-#define AA 2
+#define AA (1 << 2)
 #endif
 
 #ifndef SI
-#define SI 3
+#define SI (1 << 3)
 #endif
 
 #ifndef STO
-#define STO 4
+#define STO (1 << 4)
 #endif
 
 #ifndef STA
-#define STA 5
+#define STA (1 << 5)
 #endif
 
 #ifndef I2EN
-#define I2EN 6
+#define I2EN (1 << 6)
 #endif
 
 #ifndef DUTY_CYCLE
@@ -48,7 +48,7 @@
 #define MASTER_BUFFER_SIZE 64
 #endif
 
-typedef enum {
+typedef enum {//TODO more of these
   OK = 0,
   ERR_BUSY = -1,
   ERR_DATA_SIZE = -2
