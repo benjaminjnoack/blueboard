@@ -8,18 +8,18 @@ __Complete__
 * [I2C](https://github.com/benjaminjnoack/blueboard/tree/master/lib/i2c)
 * [Joystick](https://github.com/benjaminjnoack/blueboard/tree/master/lib/joystick)
 * [LEDs](https://github.com/benjaminjnoack/blueboard/tree/master/lib/leds)
+* [LM7580 Digital temperature sensor](https://github.com/benjaminjnoack/blueboard/tree/master/lib/lm75b)
 * [Pots](https://github.com/benjaminjnoack/blueboard/tree/master/lib/pots)
 * [PWM](https://github.com/benjaminjnoack/blueboard/tree/master/lib/pwm)
 * [RGB LED](https://github.com/benjaminjnoack/blueboard/tree/master/lib/rgb)
 
 __In Progress__
-* LM7580 Digital temperature sensor and thermal watchdog
+* MMA7660 3 Axis Accelerometer
 
 __Planned__
 * SysTick
 * RIT
 * Speaker
-* MMA7660
 * SPI
 * CR12832
 * UART
@@ -36,6 +36,8 @@ __Planned__
 * read_pot_async
 * support double edge PWM
 * blueboard.c (initialize() - function to set up the board as necessary)
+* mode operation to lm75b
+* timeout for i2c
 
 ## Difficulties
 
