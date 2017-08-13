@@ -16,6 +16,8 @@ __In Progress__
 * LM7580 Digital temperature sensor and thermal watchdog
 
 __Planned__
+* SysTick
+* RIT
 * Speaker
 * MMA7660
 * SPI
