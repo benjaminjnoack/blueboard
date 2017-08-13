@@ -101,9 +101,8 @@ void I2C2_IRQHandler(void) {
       break;
     case SLA_W_TRANSMITTED_ACK:
       LPC_I2C2->I2CONCLR = SI;
+      LPC_I2C2->I2DAT = *master_ptr++;
       data_counter--;
-      LPC_I2C2->I2DAT = *master_ptr;
-      master_ptr++;
       break;
     case SLA_W_TRANSMITTED_NACK:
       LPC_I2C2->I2CONSET = (AA | STO);
@@ -120,13 +119,14 @@ void I2C2_IRQHandler(void) {
       }
       break;
     case DATA_W_TRANSMITTED_NACK:
+      LPC_I2C2->I2CONCLR = SI;
       LPC_I2C2->I2CONSET = (AA | STO);
       mode = IDLE;
-      LPC_I2C2->I2CONCLR = SI;
       break;
     case SLA_R_TRANSMITTED_ACK:
-      LPC_I2C2->I2CONSET = AA;
       LPC_I2C2->I2CONCLR = SI;
+      LPC_I2C2->I2CONSET = AA;
+      data_counter--;
       break;
     case SLA_R_TRANSMITTED_NACK:
       LPC_I2C2->I2CONSET = (AA | STO);
@@ -134,11 +134,11 @@ void I2C2_IRQHandler(void) {
       LPC_I2C2->I2CONCLR = SI;
       break;
     case DATA_R_TRANSMITTED_ACK:
-      if (--data_counter - 1) {
-        LPC_I2C2->I2CONCLR = (AA | SI);
+      if (--data_counter) {
+        LPC_I2C2->I2CONCLR = SI;
         mode = IDLE;
       } else {
-        LPC_I2C2->I2CONCLR = SI;
+        LPC_I2C2->I2CONCLR = (AA | SI);
       }
       *master_ptr++ = LPC_I2C2->I2DAT;
       break;
