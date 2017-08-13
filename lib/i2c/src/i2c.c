@@ -14,16 +14,13 @@ void init_i2c(void) {
   //PCLK_I2C2 = CCLK/8
   LPC_SC->PCLKSEL1 |= (0x3 << 20);
   //set the direction to output
-  LPC_GPIO0->FIODIR1 |= ((1 << 2) | (1 << 3));
+  LPC_GPIO0->FIODIR1 |= (0x3 << 2);
   //select I2C2 SDA and SCK
-  LPC_PINCON->PINSEL0 |= (1 << 21);
-  LPC_PINCON->PINSEL0 |= (1 << 23);
+  LPC_PINCON->PINSEL0 |= (1 << 21) | (1 << 23);
   //pins have neither pull up nor pull down resistors
-  LPC_PINCON->PINMODE0 |= (1 << 21);
-  LPC_PINCON->PINMODE0 |= (1 << 23);
+  LPC_PINCON->PINMODE0 |= (1 << 21) | (1 << 23);
   //set pins to open drain
-  LPC_PINCON->PINMODE_OD0 |= (1 << 10);
-  LPC_PINCON->PINMODE_OD0 |= (1 << 11);
+  LPC_PINCON->PINMODE_OD0 |= (0x3 << 10);
   //enable I2C interface
   LPC_I2C2->I2CONSET |= I2EN;
   //set the duty cycle to 120 cycles

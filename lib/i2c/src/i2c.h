@@ -20,6 +20,12 @@
 #define AA (1 << 2)
 #endif
 
+/*
+SI is the I 2 C Interrupt Flag. This bit is set when the I 2 C state changes.
+While SI is set, the low period of the serial clock on the SCL line is stretched, and the
+serial transfer is suspended. When SCL is HIGH, it is unaffected by the state of the SI
+flag. SI must be reset by software, by writing a 1 to the SIC bit in I2CONCLR register.
+*/
 #ifndef SI
 #define SI (1 << 3)
 #endif
@@ -76,12 +82,3 @@ typedef enum {
 void init_i2c(void);
 i2c_result_t bb_i2c_read(uint8_t address, char *buffer, uint8_t bytes);
 i2c_result_t bb_i2c_write(uint8_t address, char *buffer, uint8_t bytes);
-
-/*Interrupts in I2C
-When the I 2 C interrupt is entered, I2STAT contains a status code which identifies one of
-the 26 state services to be executed.
-SI is the I 2 C Interrupt Flag. This bit is set when the I 2 C state changes.
-While SI is set, the low period of the serial clock on the SCL line is stretched, and the
-serial transfer is suspended. When SCL is HIGH, it is unaffected by the state of the SI
-flag. SI must be reset by software, by writing a 1 to the SIC bit in I2CONCLR register.
-*/
