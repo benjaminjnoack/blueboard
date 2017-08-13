@@ -81,7 +81,6 @@ i2c_result_t bb_i2c_write(uint8_t address, char *buffer, uint8_t bytes) {
 }
 
 void I2C2_IRQHandler(void) {
-
   switch (LPC_I2C2->I2STAT) {
     case START_TRANSMITTED:
     case RE_START_TRANSMITTED:
@@ -97,16 +96,17 @@ void I2C2_IRQHandler(void) {
           break;
       }
 
-      LPC_I2C2->I2CONCLR = STA;
+      LPC_I2C2->I2CONCLR = (STA | SI);
       break;
     case SLA_W_TRANSMITTED_ACK:
       LPC_I2C2->I2DAT = *master_ptr++;
       data_counter--;
-
+      LPC_I2C2->I2CONCLR = SI;
       break;
     case SLA_W_TRANSMITTED_NACK:
       LPC_I2C2->I2CONSET = (AA | STO);
       mode = IDLE;
+      LPC_I2C2->I2CONCLR = SI;
       break;
     case DATA_W_TRANSMITTED_ACK:
       if (data_counter--) {
@@ -115,38 +115,43 @@ void I2C2_IRQHandler(void) {
         LPC_I2C2->I2CONSET = (AA | STO);
         mode = IDLE;
       }
+      LPC_I2C2->I2CONCLR = SI;
       break;
     case DATA_W_TRANSMITTED_NACK:
       LPC_I2C2->I2CONSET = (AA | STO);
       mode = IDLE;
+      LPC_I2C2->I2CONCLR = SI;
       break;
     case SLA_R_TRANSMITTED_ACK:
       LPC_I2C2->I2CONSET = AA;
+      LPC_I2C2->I2CONCLR = SI;
       break;
     case SLA_R_TRANSMITTED_NACK:
       LPC_I2C2->I2CONSET = (AA | STO);
       mode = IDLE;
+      LPC_I2C2->I2CONCLR = SI;
       break;
     case DATA_R_TRANSMITTED_ACK:
       *master_ptr++ = LPC_I2C2->I2DAT;
       if (--data_counter - 1) {
-      } else {
-        LPC_I2C2->I2CONCLR = AA;
+        LPC_I2C2->I2CONCLR = (AA | SI);
         mode = IDLE;
+      } else {
+        LPC_I2C2->I2CONCLR = SI;
       }
       break;
     case DATA_R_TRANSMITTED_NACK:
       mode = IDLE;
       LPC_I2C2->I2CONSET = (AA | STO);
       *master_ptr = LPC_I2C2->I2DAT;
+      LPC_I2C2->I2CONCLR = SI;
       break;
     default:
       LPC_I2C2->I2CONSET = (AA | STO);
       mode = IDLE;
+      LPC_I2C2->I2CONCLR = SI;
       break;
   }
 
-  LPC_I2C2->I2CONCLR = SI;
-  // if (LPC_GPIO3->FIOPIN2) {}
   printf("\n");
 }
