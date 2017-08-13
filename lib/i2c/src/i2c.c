@@ -1,6 +1,4 @@
 #include "i2c.h"
-#include "leds.h"
-#include "rgb.h"
 
 volatile char slave_address;
 volatile char master_buffer[MASTER_BUFFER_SIZE];
@@ -74,7 +72,7 @@ i2c_result_t bb_i2c_write(uint8_t address, char *buffer, uint8_t bytes) {
   data_counter = bytes;
   //set the start bit
   LPC_I2C2->I2CONSET = STA;
-  //TODO timeout
+
   while (mode) {
     /* busy wait */
   }
@@ -86,7 +84,6 @@ void I2C2_IRQHandler(void) {
   switch (LPC_I2C2->I2STAT) {
     case START_TRANSMITTED:
     case RE_START_TRANSMITTED:
-      led_on(LED1);
       LPC_I2C2->I2CONCLR = STA;
       switch (mode) {
         case IDLE:
@@ -121,7 +118,6 @@ void I2C2_IRQHandler(void) {
       mode = IDLE;
       break;
     case SLA_R_TRANSMITTED_ACK:
-      led_on(LED2);
       LPC_I2C2->I2CONSET = AA;
       break;
     case SLA_R_TRANSMITTED_NACK:
@@ -131,20 +127,17 @@ void I2C2_IRQHandler(void) {
     case DATA_R_TRANSMITTED_ACK:
       *master_ptr++ = LPC_I2C2->I2DAT;
       if (--data_counter - 1) {
-        led_on(LED3);
       } else {
         LPC_I2C2->I2CONCLR = AA;
         mode = IDLE;
       }
       break;
     case DATA_R_TRANSMITTED_NACK:
-      led_on(LED4);
       *master_ptr = LPC_I2C2->I2DAT;
       LPC_I2C2->I2CONSET = (AA | STO);
       mode = IDLE;
       break;
     default:
-      rgb_on(RED);//easy enough to connect a red led
       LPC_I2C2->I2CONSET = (AA | STO);
       mode = IDLE;
   }
