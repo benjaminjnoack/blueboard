@@ -1,5 +1,5 @@
 #include "i2c.h"
-
+#include <stdio.h>
 volatile char slave_address;
 volatile char master_buffer[MASTER_BUFFER_SIZE];
 volatile int data_counter = 0;
@@ -58,7 +58,7 @@ i2c_result_t bb_i2c_write(uint8_t address, char *buffer, uint8_t bytes) {
   } else if (bytes > MASTER_BUFFER_SIZE) {
     return ERR_DATA_SIZE;
   } else {
-    mode = READ;
+    mode = WRITE;
   }
   //set the address to read from
   slave_address = address;
@@ -96,11 +96,13 @@ void I2C2_IRQHandler(void) {
           LPC_I2C2->I2DAT = (slave_address & I2C_WRITE_MASK);
           break;
       }
+
       LPC_I2C2->I2CONCLR = STA;
       break;
     case SLA_W_TRANSMITTED_ACK:
       LPC_I2C2->I2DAT = *master_ptr++;
       data_counter--;
+
       break;
     case SLA_W_TRANSMITTED_NACK:
       LPC_I2C2->I2CONSET = (AA | STO);
@@ -143,6 +145,8 @@ void I2C2_IRQHandler(void) {
       mode = IDLE;
       break;
   }
+
   LPC_I2C2->I2CONCLR = SI;
-  if (LPC_GPIO3->FIOPIN2) {}//NOTE: completely spurious FIO access to make it work
+  // if (LPC_GPIO3->FIOPIN2) {}
+  printf("\n");
 }
