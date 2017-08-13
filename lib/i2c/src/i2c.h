@@ -16,6 +16,10 @@
 #define PCLK_I2C2 20
 #endif
 
+#ifndef AA
+#define AA 2
+#endif
+
 #ifndef SI
 #define SI 3
 #endif
@@ -51,19 +55,26 @@ typedef enum {
 } i2c_result_t;
 
 typedef enum {
+  IDLE,
+  READ,
+  WRITE
+} i2c_mode_t;
+
+typedef enum {
   START_TRANSMITTED = 0x08,
   RE_START_TRANSMITTED = 0x10,
-  SLA_TRANSMITTED_ACK = 0x18,
-  SLA_TRANSMITTED_NACK = 0x20,
-  DATA_TRANSMITTED_ACK = 0x28,
-  DATA_TRANSMITTED_NACK = 0x30,
-  ARBITRATION_LOST_DURING_WRITE = 0x38,
-  ARBITRATION_LOST_OWN_ADDRESS_RECIEVED = 0x68,
-  ARBITRATION_LOST_GENERAL_ADDRESS_RECIEVED = 0x78
+  SLA_W_TRANSMITTED_ACK = 0x18,
+  SLA_W_TRANSMITTED_NACK = 0x20,
+  DATA_W_TRANSMITTED_ACK = 0x28,
+  DATA_W_TRANSMITTED_NACK = 0x30,
+  SLA_R_TRANSMITTED_ACK = 0x40,
+  SLA_R_TRANSMITTED_NACK = 0x48,
+  DATA_R_TRANSMITTED_ACK = 0x50,
+  DATA_R_TRANSMITTED_NACK = 0x58
 } i2stat_t;
 
 void init_i2c(void);
-i2c_result_t bb_i2c_read(char address, char *buffer, char bytes);
+i2c_result_t bb_i2c_read(uint8_t address, char *buffer, uint8_t bytes);
 i2c_result_t bb_i2c_write(uint8_t address, char *buffer, uint8_t bytes);
 
 /*Interrupts in I2C

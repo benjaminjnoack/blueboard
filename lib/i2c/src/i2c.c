@@ -1,11 +1,12 @@
 #include "i2c.h"
 #include "leds.h"
+#include "rgb.h"
 
 volatile char slave_address;
 volatile char master_buffer[MASTER_BUFFER_SIZE];
 volatile int data_counter = 0;
 volatile char *master_ptr;
-volatile char busy = 0;
+volatile i2c_mode_t mode = IDLE;
 
 void init_i2c(void) {
   //power the I2C peripheral
@@ -17,7 +18,7 @@ void init_i2c(void) {
   //select I2C2 SDA and SCK
   LPC_PINCON->PINSEL0 |= (1 << 21);
   LPC_PINCON->PINSEL0 |= (1 << 23);
-  //pins have neither pull up nor pull down resistors enabled
+  //pins have neither pull up nor pull down resistors
   LPC_PINCON->PINMODE0 |= (1 << 21);
   LPC_PINCON->PINMODE0 |= (1 << 23);
   //set pins to open drain
@@ -32,13 +33,37 @@ void init_i2c(void) {
   NVIC_EnableIRQ(I2C2_IRQn);
 }
 
-i2c_result_t bb_i2c_write(uint8_t address, char *buffer, uint8_t bytes) {
-  if (busy) {
+i2c_result_t bb_i2c_read(uint8_t address, char *buffer, uint8_t bytes) {
+  if (mode) {
     return ERR_BUSY;
   } else if (bytes > MASTER_BUFFER_SIZE) {
     return ERR_DATA_SIZE;
   } else {
-    busy = 1;
+    mode = READ;
+  }
+
+  slave_address = address;
+  master_ptr = &buffer[0];
+  data_counter = bytes;
+  LPC_I2C2->I2CONSET |= (1 << STA);
+  while (mode) {
+    /* busy wait */
+  }
+  // move data to buffer
+  for (uint8_t i = 0; i < bytes; i++) {
+    buffer[i] = master_buffer[i];
+  }
+
+  return OK;
+}
+
+i2c_result_t bb_i2c_write(uint8_t address, char *buffer, uint8_t bytes) {
+  if (mode) {
+    return ERR_BUSY;
+  } else if (bytes > MASTER_BUFFER_SIZE) {
+    return ERR_DATA_SIZE;
+  } else {
+    mode = READ;
   }
   //set the address to read from
   slave_address = address;
@@ -53,10 +78,10 @@ i2c_result_t bb_i2c_write(uint8_t address, char *buffer, uint8_t bytes) {
   //set the start bit
   LPC_I2C2->I2CONSET |= (1 << STA);
   //TODO timeout
-  while (busy) {
+  while (mode) {
     /* busy wait */
   }
-  led_on(LED4);
+
   return OK;
 }
 
@@ -65,38 +90,69 @@ void I2C2_IRQHandler(void) {
     case START_TRANSMITTED:
     case RE_START_TRANSMITTED:
       led_on(LED1);
-      LPC_I2C2->I2CONCLR = (1 << STA);//clear the start bit
-      LPC_I2C2->I2DAT = (slave_address & I2C_WRITE_MASK);
+      LPC_I2C2->I2CONCLR = (1 << STA);//TODO set as define
+      switch (mode) {
+        case IDLE:
+          //TODO
+          break;
+        case READ:
+          LPC_I2C2->I2DAT = (slave_address | 1);
+          break;
+        case WRITE:
+          LPC_I2C2->I2DAT = (slave_address & I2C_WRITE_MASK);
+          break;
+      }
       break;
-    case SLA_TRANSMITTED_ACK:
-      led_on(LED2);
+    case SLA_W_TRANSMITTED_ACK:
       LPC_I2C2->I2DAT = *master_ptr;
       master_ptr++;
       data_counter--;
       break;
-    case SLA_TRANSMITTED_NACK:
+    case SLA_W_TRANSMITTED_NACK:
       LPC_I2C2->I2CONSET = 0x14;
-      busy = 0;
+      mode = IDLE;
       break;
-    case DATA_TRANSMITTED_ACK:
+    case DATA_W_TRANSMITTED_ACK:
       if (data_counter--) {
-        led_on(LED3);
         LPC_I2C2->I2DAT = *master_ptr;
         master_ptr++;
       } else {
         LPC_I2C2->I2CONSET = 0x14;
-        busy = 0;
+        mode = IDLE;
       }
       break;
-    case DATA_TRANSMITTED_NACK:
+    case DATA_W_TRANSMITTED_NACK:
+      LPC_I2C2->I2CONSET = 0x14;//TODO reconsider these
+      mode = IDLE;
+      break;
+    case SLA_R_TRANSMITTED_ACK:
+      led_on(LED2);
+      LPC_I2C2->I2CONSET = (1 << AA);
+      break;
+    case SLA_R_TRANSMITTED_NACK:
       LPC_I2C2->I2CONSET = 0x14;
-      busy = 0;
+      mode = IDLE;
       break;
-    case ARBITRATION_LOST_DURING_WRITE:
-    case ARBITRATION_LOST_OWN_ADDRESS_RECIEVED:
-    case ARBITRATION_LOST_GENERAL_ADDRESS_RECIEVED:
-      //TODO
+    case DATA_R_TRANSMITTED_ACK:
+      *master_ptr = LPC_I2C2->I2DAT;
+      master_ptr++;
+      if (--data_counter - 1) {
+        led_on(LED3);
+      } else {
+        led_on(LED4);
+        LPC_I2C2->I2CONCLR = 0x0C;
+        mode = IDLE;
+      }
       break;
+    case DATA_R_TRANSMITTED_NACK:
+      //TODO read byte into register
+      LPC_I2C2->I2CONSET = 0x14;
+      mode = IDLE;
+      break;
+    default:
+      rgb_on(RED);//easy enough to connect a red led
+      LPC_I2C2->I2CONSET = 0x14;
+      mode = IDLE;
   }
   //unset the SI bit through I2CONCLR
   LPC_I2C2->I2CONCLR = 0x08;
