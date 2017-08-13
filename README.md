@@ -8,7 +8,7 @@ __Complete__
 * [I2C](https://github.com/benjaminjnoack/blueboard/tree/master/lib/i2c)
 * [Joystick](https://github.com/benjaminjnoack/blueboard/tree/master/lib/joystick)
 * [LEDs](https://github.com/benjaminjnoack/blueboard/tree/master/lib/leds)
-* [LM7580 Digital temperature sensor](https://github.com/benjaminjnoack/blueboard/tree/master/lib/LM75B)
+* [LM7580 Digital temperature sensor](https://github.com/benjaminjnoack/blueboard/tree/master/lib/lm75b)
 * [Pots](https://github.com/benjaminjnoack/blueboard/tree/master/lib/pots)
 * [PWM](https://github.com/benjaminjnoack/blueboard/tree/master/lib/pwm)
 * [RGB LED](https://github.com/benjaminjnoack/blueboard/tree/master/lib/rgb)
