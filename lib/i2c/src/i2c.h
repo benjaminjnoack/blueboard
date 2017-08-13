@@ -17,7 +17,7 @@
 #endif
 
 #ifndef AA
-#define AA (1 << 2)
+#define AA (0x1 << 2)
 #endif
 
 /*
@@ -27,19 +27,19 @@ serial transfer is suspended. When SCL is HIGH, it is unaffected by the state of
 flag. SI must be reset by software, by writing a 1 to the SIC bit in I2CONCLR register.
 */
 #ifndef SI
-#define SI (1 << 3)
+#define SI (0x1 << 3)
 #endif
 
 #ifndef STO
-#define STO (1 << 4)
+#define STO (0x1 << 4)
 #endif
 
 #ifndef STA
-#define STA (1 << 5)
+#define STA (0x1 << 5)
 #endif
 
 #ifndef I2EN
-#define I2EN (1 << 6)
+#define I2EN (0x1 << 6)
 #endif
 
 #ifndef DUTY_CYCLE
