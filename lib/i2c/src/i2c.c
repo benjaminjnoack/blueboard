@@ -8,11 +8,11 @@ volatile i2c_mode_t mode = IDLE;
 
 void init_i2c(void) {
   //power the I2C peripheral
-  LPC_SC->PCONP |= (1 << PCI2C2);
+  LPC_SC->PCONP |= PCI2C2;
   //PCLK_I2C2 = CCLK/8
   LPC_SC->PCLKSEL1 |= (0x3 << 20);
   //set the direction to output
-  LPC_GPIO0->FIODIR1 |= (0x3 << 2);
+  LPC_GPIO0->FIODIR1 |= ((1 << 2) | (1 << 3));
   //select I2C2 SDA and SCK
   LPC_PINCON->PINSEL0 |= (1 << 21) | (1 << 23);
   //pins have neither pull up nor pull down resistors
@@ -20,7 +20,7 @@ void init_i2c(void) {
   //set pins to open drain
   LPC_PINCON->PINMODE_OD0 |= (0x3 << 10);
   //enable I2C interface
-  LPC_I2C2->I2CONSET |= I2EN;
+  LPC_I2C2->I2CONSET = I2EN;
   //set the duty cycle to 120 cycles
   LPC_I2C2->I2SCLL = DUTY_CYCLE;
   LPC_I2C2->I2SCLH = DUTY_CYCLE;
@@ -81,13 +81,13 @@ i2c_result_t bb_i2c_write(uint8_t address, char *buffer, uint8_t bytes) {
 }
 
 void I2C2_IRQHandler(void) {
+
   switch (LPC_I2C2->I2STAT) {
     case START_TRANSMITTED:
     case RE_START_TRANSMITTED:
-      LPC_I2C2->I2CONCLR = STA;
       switch (mode) {
         case IDLE:
-          //TODO
+
           break;
         case READ:
           LPC_I2C2->I2DAT = (slave_address | 1);
@@ -96,6 +96,7 @@ void I2C2_IRQHandler(void) {
           LPC_I2C2->I2DAT = (slave_address & I2C_WRITE_MASK);
           break;
       }
+      LPC_I2C2->I2CONCLR = STA;
       break;
     case SLA_W_TRANSMITTED_ACK:
       LPC_I2C2->I2DAT = *master_ptr++;
@@ -133,14 +134,15 @@ void I2C2_IRQHandler(void) {
       }
       break;
     case DATA_R_TRANSMITTED_NACK:
-      *master_ptr = LPC_I2C2->I2DAT;
-      LPC_I2C2->I2CONSET = (AA | STO);
       mode = IDLE;
+      LPC_I2C2->I2CONSET = (AA | STO);
+      *master_ptr = LPC_I2C2->I2DAT;
       break;
     default:
       LPC_I2C2->I2CONSET = (AA | STO);
       mode = IDLE;
+      break;
   }
-  //unset the SI bit through I2CONCLR
   LPC_I2C2->I2CONCLR = SI;
+  if (LPC_GPIO3->FIOPIN2) {}//NOTE: completely spurious FIO access to make it work
 }

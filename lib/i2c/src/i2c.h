@@ -9,7 +9,7 @@
 #endif
 
 #ifndef PCI2C2
-#define PCI2C2 26
+#define PCI2C2 (1 << 26)
 #endif
 
 #ifndef PCLK_I2C2
