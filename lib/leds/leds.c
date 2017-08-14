@@ -9,5 +9,5 @@ void led_off(led_t led) {
 }
 
 void led_on(led_t led) {
-  LPC_GPIO1->FIOPIN2 |= led;
+  LPC_GPIO1->FIOPIN2 |= (led);
 }
