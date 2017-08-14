@@ -74,7 +74,8 @@ i2c_result_t bb_i2c_write(uint8_t address, char *buffer, uint8_t bytes) {
   return OK;
 }
 
-i2c_result_t read_i2c_register(uint8_t address, char reg, uint8_t bytes) {
+i2c_result_t read_i2c_register(uint8_t address, char reg, uint8_t bytes, char *dest)
+{
   if (mode) {
     return ERR_BUSY;
   } else if (bytes > MASTER_BUFFER_SIZE) {
@@ -85,12 +86,17 @@ i2c_result_t read_i2c_register(uint8_t address, char reg, uint8_t bytes) {
 
   slave_address = address;
   master_buffer[0] = reg;
-  master_ptr = &master_buffer[0];
+  master_ptr = master_buffer;
   data_counter = bytes;
   LPC_I2C2->I2CONSET = STA;
   while (mode) {
     /* busy wait */
   }
+
+  for(uint8_t i = 0; i < bytes; i++) {
+    dest[i] = master_buffer[i];
+  }
+
   return OK;
 }
 
@@ -150,8 +156,12 @@ void I2C2_IRQHandler(void) {
       break;
     case SLA_R_TRANSMITTED_ACK:
       LPC_I2C2->I2CONCLR = SI;
-      LPC_I2C2->I2CONSET = AA;
       data_counter--;
+      if (data_counter) {
+        LPC_I2C2->I2CONSET = AA;
+      } else {
+        LPC_I2C2->I2CONCLR = AA;
+      }
       break;
     case SLA_R_TRANSMITTED_NACK:
       LPC_I2C2->I2CONSET = (AA | STO);
