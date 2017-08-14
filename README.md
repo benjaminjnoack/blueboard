@@ -25,6 +25,7 @@ __Planned__
 * SPI
 * CR12832
 * UART
+* Serial `sprintf`
 * USBHost
 * USBDevice
 * XBee
@@ -32,24 +33,6 @@ __Planned__
 * RN42-XV
 * Ethernet
 * *special guest* UZB
-
-## TODO
-
-* remove unnecessary ADC channels
-* read_pot_async
-* support double edge PWM
-* blueboard.c (initialize() - function to set up the board as necessary)
-* mode operation to lm75b
-* timeout for i2c
-* 7 bit i2c addresses passed as arguments, shifted over on and the R/W bit
-* support negative values for the LM75B
-* use `sprintf` for Serial debug?
-
-## Difficulties
-
-* Had to clear the start bit for I2C.
-* Had to clear SI before attempting to write to DAT for I2C.
-
 ___
 
 "Take some heart if your working on a project that no one understands, or no one appreciates.
