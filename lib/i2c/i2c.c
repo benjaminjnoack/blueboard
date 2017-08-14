@@ -6,6 +6,8 @@ volatile int data_counter = 0;
 volatile char *master_ptr;
 volatile i2c_mode_t mode = IDLE;
 volatile i2c_result_t i2c_result;
+//private function
+void run_i2C(uint8_t address, uint8_t bytes);
 
 void init_i2c(void) {
   //power the I2C peripheral
@@ -34,17 +36,11 @@ i2c_result_t read_i2c(uint8_t address, char *buffer, uint8_t bytes) {
     return I2C_ERR_BUSY;
   } else if (bytes > MASTER_BUFFER_SIZE) {
     return I2C_ERR_DATA_SIZE;
-  } else {
-    mode = READ;
   }
 
-  slave_address = ((address << 1) | 0x01);
-  master_ptr = &buffer[0];
-  data_counter = bytes;
-  LPC_I2C2->I2CONSET = STA;
-  while (mode) {
-    /* busy wait */
-  }
+  mode = READ;
+  address = ((address << 1) | 0x01);
+  run_i2C(address, bytes);
   // move data to buffer
   for (uint8_t i = 0; i < bytes; i++) {
     buffer[i] = master_buffer[i];
@@ -58,20 +54,14 @@ i2c_result_t write_i2c(uint8_t address, char *buffer, uint8_t bytes) {
     return I2C_ERR_BUSY;
   } else if (bytes > MASTER_BUFFER_SIZE) {
     return I2C_ERR_DATA_SIZE;
-  } else {
-    mode = WRITE;
   }
 
+  mode = WRITE;
   for (uint8_t i = 0; i < bytes; i++) {
     master_buffer[i] = buffer[i];
   }
-  slave_address = (address << 1);
-  master_ptr = &master_buffer[0];
-  data_counter = bytes;
-  LPC_I2C2->I2CONSET = STA;
-  while (mode) {
-    /* busy wait */
-  }
+  address = (address << 1);
+  run_i2C(address, bytes);
   return i2c_result;
 }
 
@@ -81,24 +71,28 @@ i2c_result_t read_i2c_register(uint8_t address, char reg, uint8_t bytes, char *d
     return I2C_ERR_BUSY;
   } else if (bytes > MASTER_BUFFER_SIZE) {
     return I2C_ERR_DATA_SIZE;
-  } else {
-    mode = READ_REGISTER;
   }
 
-  slave_address = (address << 1);
+  mode = READ_REGISTER;
+  address = (address << 1);
   master_buffer[0] = reg;
-  master_ptr = master_buffer;
-  data_counter = bytes;
-  LPC_I2C2->I2CONSET = STA;
-  while (mode) {
-    /* busy wait */
-  }
+  run_i2C(address, bytes);
 
   for(uint8_t i = 0; i < bytes; i++) {
     dest[i] = master_buffer[i];
   }
 
   return i2c_result;
+}
+
+void run_i2C(uint8_t address, uint8_t bytes) {
+  slave_address = address;
+  master_ptr = master_buffer;
+  data_counter = bytes;
+  LPC_I2C2->I2CONSET = STA;
+  while (mode) {
+    /* busy wait */
+  }
 }
 
 void I2C2_IRQHandler(void) {
