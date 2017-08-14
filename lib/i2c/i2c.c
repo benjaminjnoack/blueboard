@@ -38,7 +38,7 @@ i2c_result_t read_i2c(uint8_t address, char *buffer, uint8_t bytes) {
     mode = READ;
   }
 
-  slave_address = address;
+  slave_address = ((address << 1) | 0x01);
   master_ptr = &buffer[0];
   data_counter = bytes;
   LPC_I2C2->I2CONSET = STA;
@@ -65,7 +65,7 @@ i2c_result_t write_i2c(uint8_t address, char *buffer, uint8_t bytes) {
   for (uint8_t i = 0; i < bytes; i++) {
     master_buffer[i] = buffer[i];
   }
-  slave_address = address;
+  slave_address = (address << 1);
   master_ptr = &master_buffer[0];
   data_counter = bytes;
   LPC_I2C2->I2CONSET = STA;
@@ -85,7 +85,7 @@ i2c_result_t read_i2c_register(uint8_t address, char reg, uint8_t bytes, char *d
     mode = READ_REGISTER;
   }
 
-  slave_address = address;
+  slave_address = (address << 1);
   master_buffer[0] = reg;
   master_ptr = master_buffer;
   data_counter = bytes;

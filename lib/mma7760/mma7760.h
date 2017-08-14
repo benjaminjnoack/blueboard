@@ -2,7 +2,7 @@
 
 //7 bit address: 0x4C
 #ifndef MMA7760_ADDRESS
-#define MMA7760_ADDRESS 0x98
+#define MMA7760_ADDRESS 0x4C
 #endif
 //to write to the registers the Mode must be 0 standby
 #ifndef MMA7760_MODE

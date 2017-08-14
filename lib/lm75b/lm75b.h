@@ -11,7 +11,7 @@
 #endif
 
 #ifndef LM75B_SLAVE_ADDRESS
-#define LM75B_SLAVE_ADDRESS 0x90
+#define LM75B_SLAVE_ADDRESS 0x48
 #endif
 
 /*
