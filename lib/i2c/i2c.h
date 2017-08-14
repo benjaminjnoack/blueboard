@@ -81,6 +81,6 @@ typedef enum {//TODO better names for these TX_SLA_W_RX_ACK
 } i2stat_t;
 
 void init_i2c(void);
-i2c_result_t bb_i2c_read(uint8_t address, char *buffer, uint8_t bytes);
-i2c_result_t bb_i2c_write(uint8_t address, char *buffer, uint8_t bytes);
+i2c_result_t read_i2c(uint8_t address, char *buffer, uint8_t bytes);
+i2c_result_t write_i2c(uint8_t address, char *buffer, uint8_t bytes);
 i2c_result_t read_i2c_register(uint8_t address, char reg, uint8_t bytes, char *dest);

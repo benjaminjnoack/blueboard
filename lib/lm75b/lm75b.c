@@ -10,7 +10,7 @@ lm75b_mode_t init_lm75b(void) {
 }
 
 float read_lm75b(void) {
-  bb_i2c_read(LM75B_SLAVE_ADDRESS, &temperature[0], 2);
+  read_i2c(LM75B_SLAVE_ADDRESS, &temperature[0], 2);
   uint16_t temp = (temperature[0] << 8);
   temp |= (temperature[1] & 0xFF);
   temp = (temp >>  5);
