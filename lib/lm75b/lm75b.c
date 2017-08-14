@@ -14,6 +14,11 @@ float read_lm75b(void) {
   uint16_t temp = (temperature[0] << 8);
   temp |= (temperature[1] & 0xFF);
   temp = (temp >>  5);
+
+  if (temp & 0x0400) {
+    temp = (~temp & 0x07FF) + 1;
+  }
+
   return (float) (temp * 0.125);
 }
 
