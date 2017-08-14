@@ -5,6 +5,7 @@ volatile char master_buffer[MASTER_BUFFER_SIZE];
 volatile int data_counter = 0;
 volatile char *master_ptr;
 volatile i2c_mode_t mode = IDLE;
+volatile i2c_result_t i2c_result;
 
 void init_i2c(void) {
   //power the I2C peripheral
@@ -30,9 +31,9 @@ void init_i2c(void) {
 
 i2c_result_t read_i2c(uint8_t address, char *buffer, uint8_t bytes) {
   if (mode) {
-    return ERR_BUSY;
+    return I2C_ERR_BUSY;
   } else if (bytes > MASTER_BUFFER_SIZE) {
-    return ERR_DATA_SIZE;
+    return I2C_ERR_DATA_SIZE;
   } else {
     mode = READ;
   }
@@ -49,14 +50,14 @@ i2c_result_t read_i2c(uint8_t address, char *buffer, uint8_t bytes) {
     buffer[i] = master_buffer[i];
   }
 
-  return OK;
+  return i2c_result;
 }
 
 i2c_result_t write_i2c(uint8_t address, char *buffer, uint8_t bytes) {
   if (mode) {
-    return ERR_BUSY;
+    return I2C_ERR_BUSY;
   } else if (bytes > MASTER_BUFFER_SIZE) {
-    return ERR_DATA_SIZE;
+    return I2C_ERR_DATA_SIZE;
   } else {
     mode = WRITE;
   }
@@ -71,15 +72,15 @@ i2c_result_t write_i2c(uint8_t address, char *buffer, uint8_t bytes) {
   while (mode) {
     /* busy wait */
   }
-  return OK;
+  return i2c_result;
 }
 
 i2c_result_t read_i2c_register(uint8_t address, char reg, uint8_t bytes, char *dest)
 {
   if (mode) {
-    return ERR_BUSY;
+    return I2C_ERR_BUSY;
   } else if (bytes > MASTER_BUFFER_SIZE) {
-    return ERR_DATA_SIZE;
+    return I2C_ERR_DATA_SIZE;
   } else {
     mode = READ_REGISTER;
   }
@@ -97,7 +98,7 @@ i2c_result_t read_i2c_register(uint8_t address, char reg, uint8_t bytes, char *d
     dest[i] = master_buffer[i];
   }
 
-  return OK;
+  return i2c_result;
 }
 
 void I2C2_IRQHandler(void) {
@@ -133,6 +134,7 @@ void I2C2_IRQHandler(void) {
       break;
     case TX_SLAW_RX_NAK:
       LPC_I2C2->I2CONSET = (AA | STO);
+      i2c_result = I2C_ADDR_NAK;
       mode = IDLE;
       LPC_I2C2->I2CONCLR = SI;
       break;
@@ -145,14 +147,16 @@ void I2C2_IRQHandler(void) {
           LPC_I2C2->I2DAT = *master_ptr++;
         } else {
           LPC_I2C2->I2CONSET = (AA | STO);
+          i2c_result = I2C_OK;
           mode = IDLE;
         }
       }
       break;
     case TX_DATAW_RX_NAK:
-      LPC_I2C2->I2CONCLR = SI;
       LPC_I2C2->I2CONSET = (AA | STO);
+      i2c_result = I2C_DATA_NAK;
       mode = IDLE;
+      LPC_I2C2->I2CONCLR = SI;
       break;
     case TX_SLAR_RX_ACK:
       LPC_I2C2->I2CONCLR = SI;
@@ -165,12 +169,14 @@ void I2C2_IRQHandler(void) {
       break;
     case TX_SLAR_RX_NAK:
       LPC_I2C2->I2CONSET = (AA | STO);
+      i2c_result = I2C_ADDR_NAK;
       mode = IDLE;
       LPC_I2C2->I2CONCLR = SI;
       break;
     case TX_DATAR_RX_ACK:
       if (--data_counter) {
         LPC_I2C2->I2CONCLR = SI;
+        i2c_result = I2C_OK;
         mode = IDLE;
       } else {
         LPC_I2C2->I2CONCLR = (AA | SI);
@@ -179,12 +185,14 @@ void I2C2_IRQHandler(void) {
       break;
     case TX_DATAR_RX_NAK:
       LPC_I2C2->I2CONCLR = SI;
+      i2c_result = I2C_DATA_NAK;
       mode = IDLE;
       LPC_I2C2->I2CONSET = (AA | STO);
       *master_ptr = LPC_I2C2->I2DAT;
       break;
     default:
       LPC_I2C2->I2CONSET = (AA | STO);
+      i2c_result = I2C_ERR_UNKNOWN;
       mode = IDLE;
       LPC_I2C2->I2CONCLR = SI;
       break;
