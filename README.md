@@ -1,6 +1,6 @@
 # BlueBoard
 
-C library for the [LPC1768](https://developer.mbed.org/platforms/mbed-LPC1768/) [mbed application board](https://developer.mbed.org/cookbook/mbed-application-board). It is build with [PlatformIO](http://platformio.org/).
+C library for the [LPC1768](https://developer.mbed.org/platforms/mbed-LPC1768/) [mbed application board](https://developer.mbed.org/cookbook/mbed-application-board). Built with [PlatformIO](http://platformio.org/).
 
 ---
 
