@@ -120,7 +120,7 @@ void I2C2_IRQHandler(void) {
     case SLA_W_TRANSMITTED_ACK:
       LPC_I2C2->I2CONCLR = SI;
       LPC_I2C2->I2DAT = *master_ptr;
-      if (mode == READ) {
+      if (mode == WRITE) {
         master_ptr++;
         data_counter--;
       }
