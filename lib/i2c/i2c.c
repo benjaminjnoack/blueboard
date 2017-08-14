@@ -102,7 +102,7 @@ i2c_result_t read_i2c_register(uint8_t address, char reg, uint8_t bytes, char *d
 
 void I2C2_IRQHandler(void) {
   switch (LPC_I2C2->I2STAT) {
-    case START_TRANSMITTED:
+    case TX_START:
       LPC_I2C2->I2CONCLR = (STA | SI);
       switch (mode) {
         case IDLE:
@@ -117,13 +117,13 @@ void I2C2_IRQHandler(void) {
           break;
       }
       break;
-    case RE_START_TRANSMITTED:
+    case TX_RESTART:
       LPC_I2C2->I2CONCLR = (STA | SI);
       if (mode == READ_REGISTER) {
         LPC_I2C2->I2DAT = (slave_address | 0x1);
       }
       break;
-    case SLA_W_TRANSMITTED_ACK:
+    case TX_SLAW_RX_ACK:
       LPC_I2C2->I2CONCLR = SI;
       LPC_I2C2->I2DAT = *master_ptr;
       if (mode == WRITE) {
@@ -131,12 +131,12 @@ void I2C2_IRQHandler(void) {
         data_counter--;
       }
       break;
-    case SLA_W_TRANSMITTED_NACK:
+    case TX_SLAW_RX_NAK:
       LPC_I2C2->I2CONSET = (AA | STO);
       mode = IDLE;
       LPC_I2C2->I2CONCLR = SI;
       break;
-    case DATA_W_TRANSMITTED_ACK:
+    case TX_DATAW_RX_ACK:
       LPC_I2C2->I2CONCLR = SI;
       if (mode == READ_REGISTER) {
         LPC_I2C2->I2CONSET = STA;
@@ -149,12 +149,12 @@ void I2C2_IRQHandler(void) {
         }
       }
       break;
-    case DATA_W_TRANSMITTED_NACK:
+    case TX_DATAW_RX_NAK:
       LPC_I2C2->I2CONCLR = SI;
       LPC_I2C2->I2CONSET = (AA | STO);
       mode = IDLE;
       break;
-    case SLA_R_TRANSMITTED_ACK:
+    case TX_SLAR_RX_ACK:
       LPC_I2C2->I2CONCLR = SI;
       data_counter--;
       if (data_counter) {
@@ -163,12 +163,12 @@ void I2C2_IRQHandler(void) {
         LPC_I2C2->I2CONCLR = AA;
       }
       break;
-    case SLA_R_TRANSMITTED_NACK:
+    case TX_SLAR_RX_NAK:
       LPC_I2C2->I2CONSET = (AA | STO);
       mode = IDLE;
       LPC_I2C2->I2CONCLR = SI;
       break;
-    case DATA_R_TRANSMITTED_ACK:
+    case TX_DATAR_RX_ACK:
       if (--data_counter) {
         LPC_I2C2->I2CONCLR = SI;
         mode = IDLE;
@@ -177,7 +177,7 @@ void I2C2_IRQHandler(void) {
       }
       *master_ptr++ = LPC_I2C2->I2DAT;
       break;
-    case DATA_R_TRANSMITTED_NACK:
+    case TX_DATAR_RX_NAK:
       LPC_I2C2->I2CONCLR = SI;
       mode = IDLE;
       LPC_I2C2->I2CONSET = (AA | STO);
