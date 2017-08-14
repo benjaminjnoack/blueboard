@@ -33,14 +33,10 @@
 #endif
 
 typedef enum {
-  AD0,  //P0.23
-  AD1,  //P0.24
-  AD2,  //P0.25
-  AD3,  //P0.26
-  AD4,  //P1.30
-  AD5,  //P1.31
-  AD6,  //P0.3
-  AD7   //P0.2
+  AD2,  //P0.25 Analog In
+  AD3,  //P0.26 Analog Out
+  AD4,  //P1.30 POT1
+  AD5,  //P1.31 POT2
 } ain_t;
 
 void init_adc(void);

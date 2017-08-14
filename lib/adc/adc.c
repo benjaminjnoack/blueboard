@@ -10,12 +10,6 @@ void init_adc(void) {
 void init_ain(ain_t ain) {
   //TODO set the pin to input
   switch (ain) {
-    case AD0:
-      LPC_PINCON->PINSEL1 |= (0x1 << 14);
-      break;
-    case AD1:
-      LPC_PINCON->PINSEL1 |= (0x1 << 16);
-      break;
     case AD2:
       LPC_PINCON->PINSEL1 |= (0x1 << 18);
       break;
@@ -27,12 +21,6 @@ void init_ain(ain_t ain) {
       break;
     case AD5:
       LPC_PINCON->PINSEL3 |= (0x3 << 30);
-      break;
-    case AD6:
-      LPC_PINCON->PINSEL0 |= (0x1 << 7);
-      break;
-    case AD7:
-      LPC_PINCON->PINSEL0 |= (0x1 << 5);
       break;
   }
 }
