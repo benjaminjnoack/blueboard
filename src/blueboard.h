@@ -3,6 +3,7 @@
 #include "i2c.h"
 #include "joystick.h"
 #include "lm75b.h"
+#include "mma7760.h"
 #include "pots.h"
 #include "pwm.h"
 #include "rgb.h"

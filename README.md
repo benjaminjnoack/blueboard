@@ -42,6 +42,8 @@ __Planned__
 * mode operation to lm75b
 * timeout for i2c
 * 7 bit i2c addresses passed as arguments, shifted over on and the R/W bit
+* support negative values for the LM75B
+* use `sprintf` for Serial debug?
 
 ## Difficulties
 
