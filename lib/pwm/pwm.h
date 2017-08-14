@@ -4,16 +4,8 @@
 #define PCPWM1 6
 #endif
 
-#ifndef PWMENA1
-#define PWMENA1 9
-#endif
-
-#ifndef PWMENA5
-#define PWMENA5 13
-#endif
-
-#ifndef PWMENA6
-#define PWMENA6 14
+#ifndef PWMENA_OFFSET
+#define PWMENA_OFFSET 8
 #endif
 
 #ifndef COUNTER_ENABLE
@@ -25,9 +17,12 @@
 #endif
 
 typedef enum {
-  PWM1, //p21 P2.5 PWM1.6
-  PWM2, //p22 P2.4 PWM1.5
-  PWM3  //p26 P2.0 PWM1.1
+  PWM1 = 1, //p26 P2.0 PWM1.1 SPEAKER
+  PWM2,     //p25 P2.1 PWM1.2 BLUE
+  PWM3,     //p24 P2.2 PWM1.3 GREEN
+  PWM4,     //p23 P2.3 PWM1.4 RED
+  PWM5,     //p21 P2.4 PWM1.5 PWM2
+  PWM6      //p22 P2.5 PWM1.6 PWM1
 } pwm_t;
 
 void init_pwm(void);

@@ -1,18 +1,15 @@
 #include "rgb.h"
+#include "pwm.h"
 
 void init_rgb(void) {
-  LPC_GPIO2->FIODIR0 |= (1 << (BLUE + 1))
-                      | (1 << (GREEN + 1))
-                      | (1 << (RED + 1));
-  LPC_GPIO2->FIOPIN0 |= (1 << (BLUE + 1))
-                      | (1 << (GREEN + 1))
-                      | (1 << (RED + 1));
+  enable_pwm(PWM2);
+  enable_pwm(PWM3);
+  enable_pwm(PWM4);
+  set_cycle_rate(0xFF);
 }
 
-void rgb_off(rgb_t rgb) {
-  LPC_GPIO2->FIOPIN0 |= (1 << (rgb + 1));
-}
-
-void rgb_on(rgb_t rgb) {
-  LPC_GPIO2->FIOPIN0 &= ~(1 << (rgb + 1));
+void set_rgb(uint8_t red, uint8_t green, uint8_t blue) {
+  set_duty_cycle(PWM4, red);
+  set_duty_cycle(PWM3, green);
+  set_duty_cycle(PWM2, blue);
 }
