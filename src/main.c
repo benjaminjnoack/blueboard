@@ -5,7 +5,13 @@ int main(int argc, char const *argv[]) {
   init_mma7760();
 
   while (1) {
-
+    read_mma7760_axis(Y_AXIS);
+    delay();
+    delay();
+    delay();
+    delay();
+    delay();
+    delay();
   }
 
   return 0;

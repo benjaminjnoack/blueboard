@@ -54,11 +54,6 @@ typedef enum {
   SIXTY_FOUR = 0x40
 } mma7760_sample_rate_t;
 
-/*
-starts in standby mode
-set the MODE register to...
-
-*/
 mma7760_mode_t init_mma7760(void);
 
 /*

@@ -14,6 +14,8 @@ mma7760_mode_t init_mma7760(void) {
 }
 
 int8_t read_mma7760_axis(mma7760_axis_t axis) {
-
+  char axis_reading;
+  read_i2c_register(MMA7760_ADDRESS, axis, 0x01, &axis_reading);
+  //TODO parse the result
   return 0;//TODO
 }
