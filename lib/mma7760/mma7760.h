@@ -4,6 +4,7 @@
 #ifndef MMA7760_ADDRESS
 #define MMA7760_ADDRESS 0x4C
 #endif
+
 //to write to the registers the Mode must be 0 standby
 #ifndef MMA7760_MODE
 #define MMA7760_MODE 0x07
@@ -31,6 +32,14 @@
 
 #ifndef MMA7760_XYZ_ALERT
 #define MMA7760_XYZ_ALERT (1 << 6)
+#endif
+
+#ifndef MMA7760_XYZ_INVALID
+#define MMA7760_XYZ_INVALID 0xFF
+#endif
+
+#ifndef MMA7760_XYZ_NEGATIVE
+#define MMA7760_XYZ_NEGATIVE (1 << 5)
 #endif
 
 typedef enum {
