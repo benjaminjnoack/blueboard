@@ -8,8 +8,8 @@ void init_rgb(void) {
   set_cycle_rate(0xFF);
 }
 
-void set_rgb(uint8_t red, uint8_t green, uint8_t blue) {
-  set_duty_cycle(PWM4, red);
-  set_duty_cycle(PWM3, green);
-  set_duty_cycle(PWM2, blue);
+void set_rgb(struct RGB *rgb) {
+  set_duty_cycle(PWM4, rgb->R);
+  set_duty_cycle(PWM3, rgb->G);
+  set_duty_cycle(PWM2, rgb->B);
 }
