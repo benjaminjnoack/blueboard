@@ -2,14 +2,14 @@
 #include "pwm.h"
 
 void init_rgb(void) {
-  enable_pwm(PWM2);
-  enable_pwm(PWM3);
-  enable_pwm(PWM4);
-  set_cycle_rate(0xFF);
+  enable_pwm(RED);
+  enable_pwm(GREEN);
+  enable_pwm(BLUE);
+  set_cycle_rate(0x100);
 }
 
 void set_rgb(struct RGB *rgb) {
-  set_duty_cycle(PWM4, rgb->R);
-  set_duty_cycle(PWM3, rgb->G);
-  set_duty_cycle(PWM2, rgb->B);
+  set_duty_cycle(RED, (uint8_t)~(rgb->R));
+  set_duty_cycle(GREEN, (uint8_t)~(rgb->G));
+  set_duty_cycle(BLUE, (uint8_t)~(rgb->B));
 }
