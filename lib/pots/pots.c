@@ -19,3 +19,17 @@ int read_pot(pot_t pot) {
 
   return ADCdata;
 }
+
+uint8_t read_pot_8(pot_t pot) {
+  uint8_t ADCdata;
+  switch (pot) {
+    case POT1:
+      ADCdata = read_ain_8(AD4);
+      break;
+    case POT2:
+      ADCdata = read_ain_8(AD5);
+      break;
+  }
+
+  return ADCdata;
+}

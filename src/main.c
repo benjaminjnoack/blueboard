@@ -1,16 +1,16 @@
 #include "blueboard.h"
 
 int main(int argc, char const *argv[]) {
+  init_pots();
   init_pwm();
   init_rgb();
   struct RGB rgb;
-  rgb.R = 0x23;
-  rgb.G = 0xFF;
-  rgb.B = 0x80;
-  set_rgb(&rgb);
-  while (1) {
 
-    delay();
+  while (1) {
+    rgb.R = read_pot_8(POT1);
+    rgb.G = read_pot_8(POT2);
+    rgb.B = 0x00;
+    set_rgb(&rgb);
   }
 
   return 0;
