@@ -18,18 +18,6 @@
 #define MMA7760_TILT 0x03
 #endif
 
-#ifndef MMA7760_XOUT
-#define MMA7760_XOUT 0x00
-#endif
-
-#ifndef MMA7760_YOUT
-#define MMA7760_YOUT 0x01
-#endif
-
-#ifndef MMA7760_ZOUT
-#define MMA7760_ZOUT 0x02
-#endif
-
 #ifndef MMA7760_XYZ_ALERT
 #define MMA7760_XYZ_ALERT (1 << 6)
 #endif
