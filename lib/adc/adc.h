@@ -42,3 +42,4 @@ typedef enum {
 void init_adc(void);
 void init_ain(ain_t ain);
 int read_ain(ain_t ain);
+uint8_t read_ain_8(ain_t ain);

@@ -37,3 +37,8 @@ int read_ain(ain_t ain) {
   ADCdata = (ADCdata >> 4) & ADC_DATA_MASK;
   return ADCdata;
 }
+
+uint8_t read_ain_8(ain_t ain) {
+  int ADCdata = read_ain(ain);
+  return (uint8_t) (ADCdata >> 4);
+}
