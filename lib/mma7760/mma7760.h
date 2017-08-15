@@ -37,10 +37,55 @@ typedef enum {
 } mma7760_axis_t;
 
 typedef enum {
+  BA_FRO_UNKNOWN,
+  BA_FRO_FRONT,
+  BA_FRO_BACK
+} back_front_t;
+
+typedef enum {
+  PO_LA_UNKNOWN,
+  PO_LA_LEFT,
+  PO_LA_RIGHT,
+  PO_LA_DOWN,
+  PO_LA_UP
+} portrait_landscape_t;
+
+typedef enum {
+  NO_TAP,
+  TAP
+} tap_t;
+
+typedef enum {
+  VALID,
+  ALERT
+} mma7760_alert_t;
+
+//NOTE:shake is ignored
+struct mma7760_tilt {
+  mma7760_alert_t Alert;
+  back_front_t BaFro;
+  portrait_landscape_t PoLa;
+  tap_t Tap;
+};
+
+struct mma7760_xyz {
+  int8_t x;
+  int8_t y;
+  int8_t z;
+};
+
+struct mma7760_reading {
+  struct mma7760_xyz xyz;
+  struct mma7760_tilt tilt;
+};
+
+typedef enum {
   MMA7760_STANDBY,
   MMA7760_ACTIVE
 } mma7760_mode_t;
 
 mma7760_mode_t init_mma7760(void);
-void read_mma7760_xyz(char *buf);
+struct mma7760_reading read_mma7760();
+struct mma7760_tilt read_mma7760_tilt();
+struct mma7760_xyz read_mma7760_xyz();
 int8_t read_mma7760_axis(mma7760_axis_t axis);
