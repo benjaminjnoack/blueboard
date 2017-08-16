@@ -1,7 +1,6 @@
 #include "pots.h"
 
 void init_pots(void) {
-  init_adc();
   init_ain(AD4);
   init_ain(AD5);
 }

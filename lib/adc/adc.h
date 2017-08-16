@@ -33,7 +33,7 @@
 #endif
 
 typedef enum {
-  AD2 = 2,  //P0.25 Analog In
+  AD2 = 2,  //P0.25 P0.25 Analog In
   AD3,  //P0.26 Analog Out
   AD4,  //p19 P1.30 POT1
   AD5,  //p20 P1.31 POT2
