@@ -1,18 +1,12 @@
 #include "blueboard.h"
 
 int main(int argc, char const *argv[]) {
-  init_adc();
-  init_ain(AD2);
-  init_pots();
-  init_pwm();
-  init_rgb();
-  struct RGB rgb;
+  init_dac();
 
   while (1) {
-    rgb.R = read_pot_8(POT1);
-    rgb.G = read_pot_8(POT2);
-    rgb.B = read_ain_8(AD2);
-    set_rgb(&rgb);
+    for (int i = 0; i < 0x03FF; i++) {
+      write_dac(i);
+    }
   }
 
   return 0;
