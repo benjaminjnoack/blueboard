@@ -1,3 +1,4 @@
+#include "c12832.h"
 #include "dac.h"
 #include "leds.h"
 #include "i2c.h"

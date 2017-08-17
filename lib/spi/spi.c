@@ -15,16 +15,10 @@ void init_spi(void) {
   LPC_SSP1->CR0 |= (CPOL | CPHA | DSS);
   //enable SPI1
   LPC_SSP1->CR1 |= SSE;
-  //set chip select as output
-  LPC_GPIO0->FIODIR2 |= CS;
-  //set high
-  LPC_GPIO0->FIOSET2 |= CS;
 }
 
 char write_spi(char data) {
-  LPC_GPIO0->FIOCLR2 |= CS;
   LPC_SSP1->DR = data;
-  while ((LPC_SSP1->SR & BUSY));
-  LPC_GPIO0->FIOSET2 |= CS;
+  while (LPC_SSP1->SR & BUSY) ;
   return (char)(LPC_SSP1->DR & 0xFF);
 }
