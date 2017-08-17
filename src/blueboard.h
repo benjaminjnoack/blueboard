@@ -7,6 +7,7 @@
 #include "pots.h"
 #include "pwm.h"
 #include "rgb.h"
+#include "spi.h"
 
 void delay() {
   double j;
