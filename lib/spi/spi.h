@@ -7,8 +7,8 @@ A0 p8 P0.6/SSEL1 high = display, low = command
 nCS p11 P0.18/MOSI0/MOSI1 should be kept high and driven low
 */
 
-#ifndef BUSY
-#define BUSY (1 << 4)
+#ifndef SPI_BUSY
+#define SPI_BUSY (1 << 4)
 #endif
 
 #ifndef CPHA//clock out phase

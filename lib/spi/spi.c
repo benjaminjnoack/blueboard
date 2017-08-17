@@ -19,6 +19,6 @@ void init_spi(void) {
 
 char write_spi(char data) {
   LPC_SSP1->DR = data;
-  while (LPC_SSP1->SR & BUSY) ;
+  while (LPC_SSP1->SR & SPI_BUSY) ;
   return (char)(LPC_SSP1->DR & 0xFF);
 }
