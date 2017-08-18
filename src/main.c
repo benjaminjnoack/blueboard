@@ -6,7 +6,11 @@ int main(int argc, char const *argv[]) {
 
   while (1) {
     for (uint8_t i = 0; ; i++) {
-      write_c12832(i);
+      if (i % 2) {
+        c12832_write_cmd(i);//odd
+      } else {
+        c12832_write_data(i);//even
+      }
     }
   }
 
