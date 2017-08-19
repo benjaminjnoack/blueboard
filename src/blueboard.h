@@ -9,6 +9,7 @@
 #include "pwm.h"
 #include "rgb.h"
 #include "spi.h"
+#include "timer.h"
 
 void delay() {
   double j;

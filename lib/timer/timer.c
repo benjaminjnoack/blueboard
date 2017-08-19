@@ -22,10 +22,20 @@ void timer_ms(uint32_t ms) {
   }
 }
 
+void timer_ms_async(uint32_t ms, void *cb()) {
+  timer_ms(ms);
+  cb();
+}
+
 void timer_us(uint32_t us) {
   LPC_TIM0->TCR = (1 << 1);
   LPC_TIM0->TCR = 1;
   while (LPC_TIM0->TC < us) {
     /* busy wait */
   }
+}
+
+void timer_us_async(uint32_t us, void *cb()) {
+  timer_us(us);
+  cb();
 }
