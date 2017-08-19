@@ -12,8 +12,8 @@ int main(int argc, char const *argv[]) {
   init_timers();
   LPC_GPIO0->FIODIR1 |= (1 << 1);
   while (1) {
-    timer_us_async(100, &p5on);
-    timer_us_async(100, &p5off);
+    timer_us_async(50, p5on);
+    timer_us_async(50, p5off);
   }
 
   return 0;
