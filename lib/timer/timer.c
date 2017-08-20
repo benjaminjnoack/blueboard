@@ -22,7 +22,7 @@ void timer_ms(uint32_t ms) {
   }
 }
 
-void timer_ms_async(uint32_t ms, void *cb()) {
+void timer_ms_async(uint32_t ms, void (*cb)(void)) {
   timer_ms(ms);
   cb();
 }
@@ -35,7 +35,7 @@ void timer_us(uint32_t us) {
   }
 }
 
-void timer_us_async(uint32_t us, void *cb()) {
+void timer_us_async(uint32_t us, void (*cb)(void)) {
   timer_us(us);
   cb();
 }

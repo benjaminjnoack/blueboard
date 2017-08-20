@@ -11,5 +11,5 @@
 void init_timers();
 void timer_ms(uint32_t ms);
 void timer_us(uint32_t us);
-void timer_ms_async(uint32_t ms, void *callback());
-void timer_us_async(uint32_t us, void *callback());
+void timer_ms_async(uint32_t ms, void (*cb)(void));
+void timer_us_async(uint32_t us, void (*cb)(void));
