@@ -1,10 +1,7 @@
 #include "LPC17xx.h"
 /*
 MOSI p5 P0.9/MOSI1
-RESET p6 P0.8/MISO1 reset low
 SCLK p7 P0.7/SCK1
-A0 p8 P0.6/SSEL1 high = display, low = command
-nCS p11 P0.18/MOSI0/MOSI1 should be kept high and driven low
 */
 
 #ifndef SPI_BUSY

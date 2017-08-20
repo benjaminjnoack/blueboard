@@ -1,14 +1,19 @@
 #include "LPC17xx.h"
 #include "spi.h"
+#include "timer.h"
+#include "gpio.h"
 
 //A0 p8 P0.6/SSEL1 high = display, low = command
-#ifndef A0
-#define A0 (1 << 6)
+#ifndef C12832_A0
+#define C12832_A0 PIN_6
 #endif
-
-//nCS p11 P0.18/MOSI0/MOSI1 should be kept high and driven low
-#ifndef CS
-#define CS (1 << 2);
+//RES p6 P0.8 active low
+#ifndef C12832_RES
+#define C12832_RES PIN_8
+#endif
+//nCS p11 P0.18 active low
+#ifndef C12832_CS
+#define C12832_CS PIN_11
 #endif
 
 typedef enum {
