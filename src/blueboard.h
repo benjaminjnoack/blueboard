@@ -10,6 +10,7 @@
 #include "rgb.h"
 #include "spi.h"
 #include "timer.h"
+#include "uart.h"
 
 void delay() {
   double j;
