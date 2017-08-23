@@ -25,7 +25,7 @@ TODO utilize scratch pad register?
 #endif
 
 typedef enum {
-  THRE = 0x01,
+  THRE = 0x01,//Transmit Holding Register Empty
   RDA = 0x02,
   RLS = 0x03,
   CTI = 0x06
@@ -36,3 +36,4 @@ void init_uart();
 void tx_uart(char tx);
 int readable_uart();
 char rx_uart();
+void tx_uarts(const char *str, uint8_t tx_num);

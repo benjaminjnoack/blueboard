@@ -1,6 +1,6 @@
 #include "blueboard.h"
 
-const char greeting[] = "hello world\n";
+const char greeting[] = "HELLO WORLD\n";
 
 int main(int argc, char const *argv[]) {
   init_timers();
@@ -8,9 +8,7 @@ int main(int argc, char const *argv[]) {
   init_uart();
 
   while (1) {
-    for (uint8_t i = 0; i < sizeof(greeting); i++) {
-      tx_uart(greeting[i]);
-    }
+    tx_uarts(greeting, 12);
     timer_ms(100);
   }
 

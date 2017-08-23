@@ -1,6 +1,10 @@
 #include "uart.h"
 #include "gpio.h"
 
+volatile char tx_bufs[255];
+volatile char *tx_char;
+volatile uint8_t uart_data_counter;
+
 void init_uart() {
   //power UART3
   LPC_SC->PCONP |= (1 << PCUART3);
@@ -22,28 +26,46 @@ void init_uart() {
   //latch divisor
   LPC_UART3->LCR &= ~(1 << DLAB);
   //enable RBR and THRE interrupts
-  // LPC_UART3->IER = 0x03;
-  // //NVIC enable UART3 interrupts
-  // NVIC_EnableIRQ(UART3_IRQn);
+  LPC_UART3->IER = 0x03;
+  //NVIC enable UART3 interrupts
+  NVIC_EnableIRQ(UART3_IRQn);
 }
 
 void tx_uart(char tx) {
   while(!((LPC_UART3->LSR) & (1 << 5))) {
-
+    /*busy wait*/
   }
 
   LPC_UART3->THR = tx;
 }
 
-// void UART3_IRQHandler(void) {
-//   // clear_gpio(PIN_8);
-//   switch ((LPC_UART3->IIR & 0x0E) >> 1) {
-//     case THRE:
-//       break;
-//     case RDA:
-//       break;
-//     case CTI://TODO
-//       break;
-//   }
-//
-// }
+void tx_uarts(const char *str, uint8_t tx_num) {
+  uart_data_counter = tx_num;
+  for (uint8_t i = 0; i < tx_num; i++) {
+    tx_bufs[i] = str[i];
+  }
+  tx_char = tx_bufs;
+  tx_uart(*(tx_char++));
+}
+
+//is the flag cleared?
+void UART3_IRQHandler(void) {
+  switch ((LPC_UART3->IIR & 0x0E) >> 1) {
+    case CTI://TODO no idea
+      break;
+    case RDA:
+      /*
+      this should be paired with an attach function?
+      it could buffer up the data
+      then there could be a readable_uart which tells if there
+      are characters in the buffer
+      */
+      break;
+    case THRE:
+      if (--uart_data_counter) {
+        LPC_UART3->THR = *tx_char++;
+      }
+      break;
+  }
+
+}
