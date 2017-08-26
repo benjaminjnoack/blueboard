@@ -40,8 +40,8 @@ typedef enum {
 } uart_int_id_t;
 
 void init_uart();
-//TODO set_uart_baud()
 void tx_uart(char tx);
 int readable_uart();
 char rx_uart();
+void rx_uart_async(void (*callback)(char rx));
 void tx_uarts(const char *str, uint8_t tx_num);

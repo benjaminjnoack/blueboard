@@ -2,9 +2,11 @@
 #include "leds.h"
 
 volatile int readable = 0;
+volatile int async = 0;
 volatile char tx_bufs[255];
 volatile char *tx_char;
 volatile uint8_t uart_data_counter = 0;
+void (*cb)(char rx);
 
 void init_uart() {
   //power UART3
@@ -49,6 +51,11 @@ void tx_uart(char tx) {
   LPC_UART3->THR = tx;
 }
 
+void rx_uart_async(void (*callback)(char rx)) {
+  cb = callback;
+  async = 1;
+}
+
 void tx_uarts(const char *str, uint8_t tx_num) {
   uart_data_counter = tx_num;
   for (uint8_t i = 0; i < tx_num; i++) {
@@ -66,23 +73,31 @@ void UART3_IRQHandler(void) {
   switch ((LPC_UART3->IIR & 0x0E) >> 1) {
     case RLS:
       //read errors from LSR to clear
-      led_on(LED4);
+      lsr = LPC_UART3->LSR;
+      if (lsr & LSR_OE) {
+        LPC_UART3->RBR;
+      } else {
+        led_on(LED4);
+      }
       break;
     case CTI:
-      led_on(LED3);
       /*
       Since the trigger level in FCR is 0,
       this should never fire
       read RBR to clear
       */
+      LPC_UART3->RBR;
       break;
     case RDA:
       lsr = LPC_UART3->LSR;
 
       if (lsr & LSR_RDR) {
-        led_on(LED1);
-        LPC_UART3->SCR = LPC_UART3->RBR;
-        readable = 1;
+        if (async) {
+          cb(LPC_UART3->RBR);
+        } else {
+          LPC_UART3->SCR = LPC_UART3->RBR;
+          readable = 1;
+        }
       } else {
         led_on(LED2);
       }
@@ -94,5 +109,4 @@ void UART3_IRQHandler(void) {
       }
       break;
   }
-
 }
