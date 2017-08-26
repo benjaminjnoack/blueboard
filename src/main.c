@@ -1,15 +1,16 @@
 #include "blueboard.h"
 
-const char greeting[] = "HELLO WORLD\n";
-
 int main(int argc, char const *argv[]) {
   init_timers();
-  init_gpio();
   init_uart();
+  init_leds();
+  char rx;
 
   while (1) {
-    tx_uarts(greeting, 12);
-    timer_ms(100);
+    if (readable_uart()) {
+      rx = rx_uart();
+      tx_uart(rx);
+    }
   }
 
   return 0;

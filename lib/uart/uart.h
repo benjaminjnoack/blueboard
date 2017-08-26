@@ -1,8 +1,5 @@
 #include "LPC17xx.h"
-/*
-attach a callback
-TODO utilize scratch pad register?
-*/
+
 //p9 P0.0/CAN_RX1/TXD3/SDA1
 #ifndef UART_TX
 #define UART_TX 9
@@ -25,11 +22,22 @@ TODO utilize scratch pad register?
 #endif
 
 typedef enum {
+  LSR_RDR = 0x01,
+  LSR_OE = 0x02,
+  LSR_PE = 0x04,
+  LSR_FE = 0x08,
+  LSR_BI = 0x10,
+  LSR_THRE = 0x20,
+  LSR_TEMT = 0x40,
+  LSR_RXFE = 0x80
+} uart_line_status_t;
+
+typedef enum {
   THRE = 0x01,//Transmit Holding Register Empty
-  RDA = 0x02,
-  RLS = 0x03,
-  CTI = 0x06
-} uart_interrupt_t;
+  RDA = 0x02, //Receive Data Available
+  RLS = 0x03, //Receive Line Status
+  CTI = 0x06  //Character Time-out Indicator
+} uart_int_id_t;
 
 void init_uart();
 //TODO set_uart_baud()
