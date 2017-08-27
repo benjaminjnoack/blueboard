@@ -6,7 +6,7 @@ void init_pots(void) {
 }
 
 int read_pot(pot_t pot) {
-  int ADCdata;
+  int ADCdata = 0;
   switch (pot) {
     case POT1:
       ADCdata = read_ain(AD4);
