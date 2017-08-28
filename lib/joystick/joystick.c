@@ -14,9 +14,9 @@ void init_joystick(void (*callback)(joystick_t joystick)) {
   LPC_PINCON->PINMODE0 |= 0xC0000000;
   LPC_PINCON->PINMODE1 |= 0x0003C00F;
   //enable rising edge interrupts
-  LPC_GPIOINT->IO0IntEnR |= ((1 << 15) | (1 << 16) | (1 << 17) | (1 << 23) | (1 << 24));
+  LPC_GPIOINT->IO0IntEnR |= (LEFT | CENTER | DOWN | UP | RIGHT);
   //enable falling edge interrupts
-  LPC_GPIOINT->IO0IntEnF |= ((1 << 15) | (1 << 16) | (1 << 17) | (1 << 23) | (1 << 24));
+  LPC_GPIOINT->IO0IntEnF |= (LEFT | CENTER | DOWN | UP | RIGHT);
   //enable EINT3_IRQn
   NVIC_EnableIRQ(EINT3_IRQn);
 }
@@ -25,26 +25,25 @@ void EINT3_IRQHandler(void) {
   joystick_t joy;
   long stat = LPC_GPIOINT->IO0IntStatF;
 
-  if (stat & ((1 << 15) | (1 << 16) | (1 << 17) | (1 << 23) | (1 << 24))) {
+  if (stat & (LEFT | CENTER | DOWN | UP | RIGHT)) {
     joy = NONE;
   } else {
     stat = LPC_GPIOINT->IO0IntStatR;
-    if (stat & (1 << 15)) {
-      LPC_GPIOINT->IO0IntClr |= (1 << 15);
+    if (stat & LEFT) {
       joy = LEFT;
-    } else if (stat & (1 << 16)) {
+    } else if (stat & CENTER) {
       joy = CENTER;
-    } else if (stat & (1 << 17)) {
+    } else if (stat & DOWN) {
       joy = DOWN;
-    } else if (stat & (1 << 23)) {
+    } else if (stat & UP) {
       joy = UP;
-    } else if (stat & (1 << 24)) {
+    } else if (stat & RIGHT) {
       joy = RIGHT;
     } else {
       joy = NONE;
     }
   }
 
-  LPC_GPIOINT->IO0IntClr |= ((1 << 15) | (1 << 16) | (1 << 17) | (1 << 23) | (1 << 24));
+  LPC_GPIOINT->IO0IntClr |= (LEFT | CENTER | DOWN | UP | RIGHT);
   cb(joy);
 }
