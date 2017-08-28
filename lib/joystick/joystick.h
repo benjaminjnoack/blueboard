@@ -9,5 +9,4 @@ typedef enum {
   RIGHT,  //p16 P0.24
 } joystick_t;
 
-void init_joystick(void);
-joystick_t read_joystick(void);
+void init_joystick(void (*callback)(joystick_t joystick));
