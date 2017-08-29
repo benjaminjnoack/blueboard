@@ -8,6 +8,7 @@
 #include "pots.h"
 #include "pwm.h"
 #include "rgb.h"
+#include "rit.h"
 #include "spi.h"
 #include "timer.h"
 #include "uart.h"
