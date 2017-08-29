@@ -1,9 +1,9 @@
 #include "joystick.h"
 #include "leds.h"
-void (*cb)(joystick_t joystick);
+void (*joystick_callback)(joystick_t joystick);
 
 void init_joystick(void (*callback)(joystick_t joystick)) {
-  cb = callback;
+  joystick_callback = callback;
   //set GPIO port direction
   LPC_GPIO0->FIODIR1 &= 0x7F; //P0.15
   LPC_GPIO0->FIODIR2 &= 0xFE  //P0.16
@@ -45,5 +45,5 @@ void EINT3_IRQHandler(void) {
   }
 
   LPC_GPIOINT->IO0IntClr |= (LEFT | CENTER | DOWN | UP | RIGHT);
-  cb(joy);
+  joystick_callback(joy);
 }

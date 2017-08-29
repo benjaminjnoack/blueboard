@@ -39,9 +39,6 @@ typedef enum {
   CTI = 0x06  //Character Time-out Indicator
 } uart_int_id_t;
 
-void init_uart();
+void init_uart(void (*callback)(char rx));
 void tx_uart(char tx);
-int readable_uart();
-char rx_uart();
-void rx_uart_async(void (*callback)(char rx));
 void tx_uarts(const char *str, uint8_t tx_num);

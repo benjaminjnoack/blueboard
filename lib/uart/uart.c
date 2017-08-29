@@ -1,14 +1,12 @@
 #include "uart.h"
-#include "leds.h"
 
-volatile int readable = 0;
-volatile int async = 0;
 volatile char tx_bufs[255];
 volatile char *tx_char;
 volatile uint8_t uart_data_counter = 0;
-void (*cb)(char rx);
+void (*uart_callback)(char rx);
 
-void init_uart() {
+void init_uart(void (*callback)(char rx)) {
+  uart_callback = callback;
   //power UART3
   LPC_SC->PCONP |= (1 << PCUART3);
   //PCLK = CCLK
@@ -34,26 +32,12 @@ void init_uart() {
   NVIC_EnableIRQ(UART3_IRQn);
 }
 
-int readable_uart() {
-  return readable;
-}
-
-char rx_uart() {
-  readable = 0;
-  return LPC_UART3->SCR & 0xFF;
-}
-
 void tx_uart(char tx) {
   while(!((LPC_UART3->LSR) & (1 << 5))) {
     /*busy wait*/
   }
 
   LPC_UART3->THR = tx;
-}
-
-void rx_uart_async(void (*callback)(char rx)) {
-  cb = callback;
-  async = 1;
 }
 
 void tx_uarts(const char *str, uint8_t tx_num) {
@@ -77,7 +61,7 @@ void UART3_IRQHandler(void) {
       if (lsr & LSR_OE) {
         LPC_UART3->RBR;
       } else {
-        led_on(LED4);
+        //TODO
       }
       break;
     case CTI:
@@ -92,14 +76,9 @@ void UART3_IRQHandler(void) {
       lsr = LPC_UART3->LSR;
 
       if (lsr & LSR_RDR) {
-        if (async) {
-          cb(LPC_UART3->RBR);
-        } else {
-          LPC_UART3->SCR = LPC_UART3->RBR;
-          readable = 1;
-        }
+        uart_callback(LPC_UART3->RBR);
       } else {
-        led_on(LED2);
+        //TODO
       }
       break;
     case THRE:
