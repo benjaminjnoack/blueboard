@@ -11,11 +11,3 @@
 #include "spi.h"
 #include "timer.h"
 #include "uart.h"
-
-void delay() {
-  double j;
-  for (j = 0; j < 50000; j++) {
-    j++;
-    j--;
-  }
-}
