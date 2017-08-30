@@ -4,14 +4,10 @@
 #define PORT0_PIN9 (1 << 1)
 #endif
 
-int flip = 0;
-
 void callback(void) {
-  if (flip) {
-    flip = 0;
+  if (LPC_GPIO0->FIOPIN1 & PORT0_PIN9) {
     LPC_GPIO0->FIOCLR1 |= PORT0_PIN9;
   } else {
-    flip = 1;
     LPC_GPIO0->FIOSET1 |= PORT0_PIN9;
   }
 }
