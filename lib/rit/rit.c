@@ -1,8 +1,13 @@
 #include "rit.h"
 
 void (*rit_cb)(void);
-//TODO the first parameter is not translated to any time base
-void init_rit(uint32_t us, void (*cb)(void)) {
+
+int init_rit(uint32_t us, void (*cb)(void)) {
+  if (us > 44739242) {
+    return 1;
+  } else {
+    us = us * 96;
+  }
   //set the callback
   rit_cb = cb;
   //power rit
@@ -15,6 +20,7 @@ void init_rit(uint32_t us, void (*cb)(void)) {
   LPC_RIT->RICOMPVAL = us;
   //enable interrupts
   NVIC_EnableIRQ(RIT_IRQn);
+  return 0;
 }
 
 void RIT_IRQHandler(void) {
