@@ -1,5 +1,6 @@
 #include "uart.h"
 
+volatile int framing_error = 0;
 volatile char tx_bufs[255];
 volatile char *tx_char;
 volatile uint8_t uart_data_counter = 0;
@@ -50,42 +51,44 @@ void tx_uarts(const char *str, uint8_t tx_num) {
   tx_uart(*(tx_char++));
 }
 
-//is the flag cleared?
 void UART3_IRQHandler(void) {
-  char lsr;
 
   switch ((LPC_UART3->IIR & 0x0E) >> 1) {
     case RLS:
-      //read errors from LSR to clear
-      lsr = LPC_UART3->LSR;
-      if (lsr & LSR_OE) {
-        LPC_UART3->RBR;
-      } else {
-        //TODO
+      switch ((uart_rls_interrupt_t)(LPC_UART3->LSR & LSR_INTERRUPT_MASK)) {
+        case LSR_PE:
+        case LSR_OE:
+        case LSR_BI:
+          LPC_UART3->RBR;
+          break;
+        case LSR_FE:
+          LPC_UART3->RBR;
+          framing_error = 1;
+          break;
       }
+
       break;
     case CTI:
       /*
-      Since the trigger level in FCR is 0,
-      this should never fire
-      read RBR to clear
+      Since the trigger level in FCR is 0, this should never fire
       */
       LPC_UART3->RBR;
       break;
     case RDA:
-      lsr = LPC_UART3->LSR;
-
-      if (lsr & LSR_RDR) {
-        uart_callback(LPC_UART3->RBR);
+      if (framing_error) {
+        LPC_UART3->RBR;
+        framing_error = 0;
       } else {
-        //TODO
+        uart_callback(LPC_UART3->RBR);
       }
+
       break;
     case THRE:
       if (uart_data_counter) {
         LPC_UART3->THR = *tx_char++;
         uart_data_counter--;
       }
+
       break;
   }
 }
