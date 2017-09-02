@@ -17,8 +17,7 @@ void init_spi(void) {
   LPC_SSP1->CR1 |= SSE;
 }
 
-char write_spi(char data) {
+void write_spi(char data) {
   LPC_SSP1->DR = data;
   while (LPC_SSP1->SR & SPI_BUSY) ;
-  return (char)(LPC_SSP1->DR & 0xFF);
 }

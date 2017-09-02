@@ -49,4 +49,4 @@ SCLK p7 P0.7/SCK1
 #endif
 
 void init_spi(void);
-char write_spi(char data);
+void write_spi(char data);
