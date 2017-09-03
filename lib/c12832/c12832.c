@@ -1,52 +1,79 @@
 #include "c12832.h"
 
 void init_c12832(void) {
-  //set command
-  gpio_clear(C12832_A0);
-  //release chip select
-  gpio_set(C12832_CS);
+  //set control lines to output
+  LPC_GPIO0->FIODIR0 |= (C12832_A0);
+  LPC_GPIO0->FIODIR1 |= (C12832_RES);
+  LPC_GPIO0->FIODIR2 |= (C12832_CS);
+  //initialize control lines high
+  LPC_GPIO0->FIOSET0 |= (C12832_A0);
+  LPC_GPIO0->FIOSET1 |= (C12832_RES);
+  LPC_GPIO0->FIOSET2 |= (C12832_CS);
   //assert reset
-  gpio_clear(C12832_RES);
+  LPC_GPIO0->FIOCLR1 |= (C12832_RES);
   timer_us(50);
-  //clear reset
-  gpio_set(C12832_RES);
+  LPC_GPIO0->FIOSET1 |= (C12832_RES);
+  //delay for voltage pumps to charge
   timer_us(5000);
-  //Start Sequence
-  c12832_write_cmd(0xAE);
-  c12832_write_cmd(0xA2);
-  c12832_write_cmd(0xA0);
-  c12832_write_cmd(0xC8);
-  c12832_write_cmd(0x22);
-  c12832_write_cmd(0x2F);
-  c12832_write_cmd(0x40);
-  c12832_write_cmd(0xAF);
-  c12832_write_cmd(0x81);
-  c12832_write_cmd(0x17);
-  c12832_write_cmd(0xA6);
-  //TODO locate(0,0)
+  //start up sequence
+  write_c12832_cmd(0xAE);//display off
+  write_c12832_cmd(0xA2);//bias voltage
+  write_c12832_cmd(0xA0);//set normal RAM address SEG output
+  write_c12832_cmd(0xC8);//column normal
+  write_c12832_cmd(0x22);//voltage resistor ratio
+  write_c12832_cmd(0x2F);//power on
+  write_c12832_cmd(0x40);//start at line 0
+  write_c12832_cmd(0xAF);//display on
+  write_c12832_cmd(0x81);//set contrast
+  write_c12832_cmd(0x17);//set contrast
+  write_c12832_cmd(0xA6);//display normal
 }
 
-void c12832_display_on() {
-  c12832_write_cmd(0xAF);
+void	clear_c12832(void){
+	int i, j;
+	for (i=0;i<4;i++) {
+  	set_c12832_cursor(i,0);
+  	for (j = 0; j < 128; j++) {
+      write_c12832_data(0x00);
+    }
+	}
+	set_c12832_cursor(0,0);
 }
 
-void c12832_start_line_set(char line) {
-  c12832_write_cmd(((line &= 0x3F) | 0x40));
+void display_c12832_all_points(char on_off) {
+  on_off &= 0x01;
+  write_c12832_cmd(0xA4 | on_off);
 }
 
-char write_c12832(char data) {
+void set_c12832_column_address(char col) {
+  col &= 0x7F;
+  write_c12832_cmd(0x00+ (col & 0x0F)); 	// set column low nibble 0
+	write_c12832_cmd(0x10 + (col/16)); 	// set column hi nibble 0
+}
+
+void 	set_c12832_cursor(char page, char col) {
+	set_c12832_column_address(col);
+	set_c12832_page_address(page);
+}
+
+void set_c12832_page_address(char page) {
+  page &= 0x03;
+  write_c12832_cmd(0xB0 + page); 	// set page address 0
+	write_c12832_cmd(0xE0); 	//auto increment display
+}
+
+void write_c12832(char data) {
   LPC_GPIO0->FIOCLR2 |= C12832_CS;
-  char read = write_spi(data);
+  write_spi(data);
   LPC_GPIO0->FIOSET2 |= C12832_CS;
-  return read;
 }
 
-char c12832_write_cmd(char cmd) {
+void write_c12832_cmd(char cmd) {
   LPC_GPIO0->FIOCLR0 |= C12832_A0;
   return write_c12832(cmd);
 }
 
-char c12832_write_data(char data) {
+void write_c12832_data(char data) {
   LPC_GPIO0->FIOSET0 |= C12832_A0;
   return write_c12832(data);
 }
