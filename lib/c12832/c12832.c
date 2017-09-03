@@ -30,14 +30,14 @@ void init_c12832(void) {
 }
 
 void	clear_c12832(void){
-	int i, j;
-	for (i=0;i<4;i++) {
-  	set_c12832_cursor(i,0);
-  	for (j = 0; j < 128; j++) {
+  int i, j;
+  for (i=0;i<4;i++) {
+    set_c12832_cursor(i,0);
+    for (j = 0; j < 128; j++) {
       write_c12832_data(0x00);
     }
-	}
-	set_c12832_cursor(0,0);
+  }
+  set_c12832_cursor(0,0);
 }
 
 void display_c12832_all_points(char on_off) {
