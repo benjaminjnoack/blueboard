@@ -47,19 +47,19 @@ void display_c12832_all_points(char on_off) {
 
 void set_c12832_column_address(char col) {
   col &= 0x7F;
-  write_c12832_cmd(0x00+ (col & 0x0F)); 	// set column low nibble 0
-	write_c12832_cmd(0x10 + (col/16)); 	// set column hi nibble 0
+  write_c12832_cmd(0x00+ (col & 0x0F));
+  write_c12832_cmd(0x10 + (col/16));
 }
 
 void 	set_c12832_cursor(char page, char col) {
-	set_c12832_column_address(col);
-	set_c12832_page_address(page);
+  set_c12832_column_address(col);
+  set_c12832_page_address(page);
 }
 
 void set_c12832_page_address(char page) {
   page &= 0x03;
-  write_c12832_cmd(0xB0 + page); 	// set page address 0
-	write_c12832_cmd(0xE0); 	//auto increment display
+  write_c12832_cmd(0xB0 + page);
+  write_c12832_cmd(0xE0);
 }
 
 void write_c12832(char data) {
